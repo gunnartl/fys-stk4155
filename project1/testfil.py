@@ -23,8 +23,8 @@ def OLS(x,y,z,n,deg):
     xnew , ynew = np.meshgrid(xnew,ynew)
     Xnew = polynomial_this(xnew.reshape(n**2,1),ynew.reshape(n**2,1),deg)
     znew = Xnew.dot(beta)
-    f = znew.reshape((n,n))
-    return xnew, ynew, f
+    plutt = znew.reshape((n,n))
+    return xnew, ynew, plutt
 
 def FRANK(x,y):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
@@ -34,10 +34,10 @@ def FRANK(x,y):
     return term1+term2+term3+term4
 
 #oppg 1
-n = 100
+n = 200
 deg = 5
-x = np.random.rand(n)
-y = np.random.rand(n)
+x = (np.random.rand(n))
+y = (np.random.rand(n))
 
 x,y = np.meshgrid(x,y)
 
@@ -45,24 +45,38 @@ x1d = x.reshape((n**2,1))
 y1d = y.reshape((n**2,1))
 
 
-z = FRANK(x1d,y1d)# +0.9*np.random.randn(n*n,1
+z = FRANK(x1d,y1d) #+0.5*np.random.randn(n*n,1)
 
 x_plot,y_plot , z_plot = OLS(x1d,y1d,z,n,deg)
+temp = z_plot.reshape((n**2,1))
+true = FRANK(x_plot,y_plot).reshape((n**2,1))
 
-MSE = (sum((z-z_plot.reshape((n**2,1)))**2)/n**2)
-R2  = 1-(sum(z - z_plot.reshape((n**2,1)))**2/sum(z-(sum(z)/n**2))) 
+MSE = sum((true-temp)**2)/(len(true))
+R2  = 1-(np.sum((true - temp)**2)/np.sum((true-np.mean(true))**2))
+
+from sklearn.metrics import r2_score
+
+#print(max(z-temp))
+
+print(r2_score(true, temp),"sklearn")
+ 
 
 print(MSE,R2)
 
-
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 from matplotlib import cm
-
-# Plot the surface.
 fig = plt.figure()
 ax = fig.gca(projection="3d")
-
-surf = ax.plot_surface(x_plot, y_plot, z_plot, cmap=cm.coolwarm,linewidth=0, antialiased=False)
-
+# Plot the surface.
+surf = ax.plot_surface(x_plot,y_plot,z_plot, cmap=cm.coolwarm,
+linewidth=0, antialiased=False)
+# Customize the z axis.
+ax.set_zlim(-0.10, 1.40)
+ax.zaxis.set_major_locator(LinearLocator(10))
+ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
+# Add a color bar which maps values to colors.
+fig.colorbar(surf, shrink=0.5, aspect=5)
 plt.show()
 
