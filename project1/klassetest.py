@@ -3,11 +3,11 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from numba import jit
-
+from reg_class import regression,polynomial_this
 from sklearn import linear_model
 
 
-
+"""
 @jit
 def polynomial_this(x,y,n):
     X = np.c_[np.ones(len(x))]
@@ -76,7 +76,7 @@ class regression:
         self.R2 = 1-(np.sum((self.z - self.znew)**2)/np.sum((self.z-np.mean(self.z))**2))
         return self.R2
 
-
+"""
 def FRANK(x,y):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
     term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
@@ -135,7 +135,7 @@ plt.ylabel("Y")
 plt.hold("on")
 #plt.show()
 #oppg 1"""
-n = 200
+n = 100
 deg = 5
 x = np.sort((np.random.rand(n)))
 y = np.sort((np.random.rand(n)))
@@ -148,51 +148,17 @@ y1d = y.reshape((n**2,1))
 
 z = FRANK(x1d,y1d) #+5*np.random.randn(n*n,1)
 
-regfrank = regression(x,y,z,n,deg)
 
-OLSfrank = regfrank.OLS()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+frankreg = regression(x1d,y1d,z,n,deg)
+betaols = frankreg.OLS()
+OLSR2 = frankreg.R2()
 
 """
-
-
-
-
-
-
-
 ridge = regression(x1d,y1d,z,n,deg)
 ridge_beta = ridge.ridge(0.01)
 z_plot = ridge.plot()
 temp = z_plot.reshape((n**2,1))
-true = FRANK(x,y).reshape((n**2,1))
+true = FRANK(x,y).reshape((n**2,1))"""
 
 #MSE = sum((true-temp)**2)/(len(true))
 #R2  = 1-(np.sum((true - temp)**2)/np.sum((true-np.mean(true))**2))
@@ -201,9 +167,8 @@ from sklearn.metrics import r2_score
 
 #print(max(z-temp))
 
-print(r2_score(true, temp),"sklearn")
- 
-
+print(r2_score(z, frankreg.plot().ravel()),"sklearn")
+"""
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
@@ -219,5 +184,4 @@ ax.zaxis.set_major_locator(LinearLocator(10))
 ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
 # Add a color bar which maps values to colors.
 fig.colorbar(surf, shrink=0.5, aspect=5)
-plt.show()
-"""
+plt.show()"""
