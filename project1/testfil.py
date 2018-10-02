@@ -31,7 +31,10 @@ def OLS(x,y,z,n,deg):
     beta = np.linalg.inv(X.T.dot(X)).dot(X.T.dot(z))
     znew = X.dot(beta)
     plutt = znew.reshape((n,n))
-    return plutt
+    sigma2 = (1./(len(z)-6))*sum((z-znew)**2)
+    print(sigma2)
+    var = np.linalg.inv(X.T.dot(X))*sigma2
+    return plutt,var
 
 
 def ridge(x,y,z,n,deg,lambd):
@@ -39,7 +42,9 @@ def ridge(x,y,z,n,deg,lambd):
     beta = np.linalg.inv(X.T.dot(X)+lambd*np.identity(X.shape[1])).dot(X.T.dot(z))
     znew = X.dot(beta)
     plutt = znew.reshape((n,n))
-    return plutt
+    sigma2 = (1./(len(z)-6))*sum((z-znew)**2)
+    var = np.linalg.inv(X.T.dot(X))*sigma2
+    return plutt, var
 
 def FRANK(x,y):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
@@ -49,7 +54,7 @@ def FRANK(x,y):
     return term1+term2+term3+term4
 
 #oppg 1
-n = 500
+n = 100
 deg = 5
 x = np.sort((np.random.rand(n)))
 y = np.sort((np.random.rand(n)))
@@ -62,7 +67,8 @@ y1d = y.reshape((n**2,1))
 
 z = FRANK(x1d,y1d) #+5*np.random.randn(n*n,1)
 
-z_plot = ridge(x1d,y1d,z,n,deg,0.1)
+z_plot,var = OLS(x1d,y1d,z,n,deg)
+
 temp = z_plot.reshape((n**2,1))
 true = FRANK(x,y).reshape((n**2,1))
 
@@ -82,6 +88,14 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 from matplotlib import cm
+
+im = plt.imshow(var)  
+plt.clabel(cset, inline=True, fmt='%1.1f', fontsize=10)
+plt.colorbar(im)  
+
+plt.show()
+
+
 fig = plt.figure()
 ax = fig.gca(projection="3d")
 # Plot the surface.
