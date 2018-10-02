@@ -47,10 +47,14 @@ class regression:
         return beta
 
          
-    def variance(self):
-        sigma2 = (1./(len(z)-deg-1))*sum((self.z-self.znew)**2)
-        covar = np.linalg.inv(self.X.T.dot(X))*sigma2
+    def beata_variance(self):
+        sigma2 = (1./(len(self.z)-self.X.shape[1]-1))*sum((self.z-self.znew)**2)
+        covar = np.linalg.inv(self.X.T.dot(self.X))*sigma2
         var = np.diagonal(covar)
+        return beta_var
+    
+    def variance(self):
+        var = np.mean((self.znew-np.mean(self.znew))**2)
         return var
 
 
@@ -77,9 +81,15 @@ class regression:
         return plutt
     
     def MSE(self):
-        MSE = sum((self.z-self.znew)**2)/(len(self.z))
+        MSE = np.mean((self.z-self.znew)**2)
         return MSE
     
     def R2(self):
         self.R2 = 1-(np.sum((self.z - self.znew)**2)/np.sum((self.z-np.mean(self.z))**2))
         return self.R2
+    def bias(self):
+        bias = np.mean((self.z-np.mean(self.znew))**2)
+        return bias
+    def term(self):
+        term = 2*sum((self.z-np.mean(self.znew))*(np.mean(self.znew)-self.znew))/len(self.z)
+        return term

@@ -146,12 +146,19 @@ x1d = x.reshape((n**2,1))
 y1d = y.reshape((n**2,1))
 
 
-z = FRANK(x1d,y1d) #+5*np.random.randn(n*n,1)
+z = FRANK(x1d,y1d) #+0.5*np.random.randn(n*n,1)
 
 
 frankreg = regression(x1d,y1d,z,n,deg)
 betaols = frankreg.OLS()
-OLSR2 = frankreg.R2()
+OLSMSE = frankreg.MSE()
+print(OLSMSE)
+OLSBIAS = frankreg.bias()
+OLSvariance = np.mean(frankreg.variance())
+term = frankreg.term()
+print(OLSBIAS, "bias")
+print(OLSvariance, "varians")
+print(OLSBIAS+OLSvariance+term)
 
 """
 ridge = regression(x1d,y1d,z,n,deg)
