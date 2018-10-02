@@ -84,6 +84,9 @@ print(r2_score(true, temp),"sklearn")
 
 print(MSE,R2)
 
+
+
+
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
@@ -108,4 +111,3 @@ ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
 # Add a color bar which maps values to colors.
 fig.colorbar(surf, shrink=0.5, aspect=5)
 plt.show()
-
