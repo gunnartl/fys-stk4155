@@ -48,9 +48,7 @@ class regression:
 
          
     def variance(self):
-        sigma2 = (1./(len(z)-deg-1))*sum((self.z-self.znew)**2)
-        covar = np.linalg.inv(self.X.T.dot(X))*sigma2
-        var = np.diagonal(covar)
+        var = np.var(self.znew)
         return var
 
 
