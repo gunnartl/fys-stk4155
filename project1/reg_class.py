@@ -13,14 +13,29 @@ def polynomial_this(x,y,n):
         X = np.c_[X,y**(i)]
     return X
 
+def bias(true, pred):
+    bias = np.mean((true - np.mean(pred))**2)
+    return bias
+
+
+         
+def variance(pred):
+    var = np.var(pred)
+    return var
+
+    
+def MSE(true, pred):
+    MSE = sum((true-pred)**2)/(len(true))
+    return MSE
+    
+def R2(true, pred):
+    R2 = 1-(np.sum((true - pred)**2)/np.sum((true-np.mean(pred))**2))
+    return R2
+
 class regression:
-    def __init__(self,x,y,z,n,deg):
-        self.x = x
-        self.y = y
+    def __init__(self,X,z):
         self.z = z
-        self.n = n
-        self.deg = deg
-        self.X = polynomial_this(x,y,deg)
+        self.X = X
         
     @jit    
     def ridge(self,lambd):
@@ -42,9 +57,10 @@ class regression:
     def lasso(self, lambd):
         lasso = linear_model.Lasso(alpha = lambd,fit_intercept = False)
         lasso.fit(self.X, self.z)
-        beta = lasso.coef_
+        beta = lasso.coef_[:,np.newaxis]
         self.znew = self.X.dot(beta)
         return beta
+<<<<<<< HEAD
 
          
     def beata_variance(self):
@@ -93,3 +109,5 @@ class regression:
     def term(self):
         term = 2*sum((self.z-np.mean(self.znew))*(np.mean(self.znew)-self.znew))/len(self.z)
         return term
+=======
+>>>>>>> 0417592c0fb58e7bcaf2491b383ffcc345fca63e
