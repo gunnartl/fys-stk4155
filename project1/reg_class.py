@@ -14,7 +14,7 @@ def polynomial_this(x,y,n):
     return X
 
 def bias(true, pred):
-    bias = np.mean((y_test - y_pred)**2)
+    bias = np.mean((true - np.mean(pred))**2)
     return bias
 
 
