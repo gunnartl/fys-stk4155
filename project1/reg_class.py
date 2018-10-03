@@ -13,14 +13,29 @@ def polynomial_this(x,y,n):
         X = np.c_[X,y**(i)]
     return X
 
+def bias(true, pred):
+    bias = np.mean((y_test - y_pred)**2)
+    return bias
+
+
+         
+def variance(pred):
+    var = np.var(pred)
+    return var
+
+    
+def MSE(true, pred):
+    MSE = sum((true-pred)**2)/(len(true))
+    return MSE
+    
+def R2(true, pred):
+    R2 = 1-(np.sum((true - pred)**2)/np.sum((true-np.mean(pred))**2))
+    return R2
+
 class regression:
-    def __init__(self,x,y,z,n,deg):
-        self.x = x
-        self.y = y
+    def __init__(self,X,z):
         self.z = z
-        self.n = n
-        self.deg = deg
-        self.X = polynomial_this(x,y,deg)
+        self.X = X
         
     @jit    
     def ridge(self,lambd):
@@ -45,39 +60,3 @@ class regression:
         beta = lasso.coef_
         self.znew = self.X.dot(beta)
         return beta
-
-         
-    def variance(self):
-        var = np.var(self.znew)
-        return var
-
-
-    def plot(self):
-        plutt = self.znew.reshape((self.n,self.n))
-        x = self.x.reshape((self.n,self.n))
-        y = self.y.reshape((self.n,self.n))
-        from mpl_toolkits.mplot3d import Axes3D
-        from matplotlib.ticker import LinearLocator, FormatStrFormatter
-        import matplotlib.pyplot as plt
-        from matplotlib import cm
-        fig = plt.figure()
-        ax = fig.gca(projection="3d")
-        # Plot the surface.
-        surf = ax.plot_surface(x,y,plutt, cmap=cm.coolwarm,
-                               linewidth=0, antialiased=False)
-        # Customize the z axis.
-        #ax.set_zlim(-0.10, 1.40)
-        ax.zaxis.set_major_locator(LinearLocator(10))
-        ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
-        # Add a color bar which maps values to colors.
-        fig.colorbar(surf, shrink=0.5, aspect=5)
-        plt.show()
-        return plutt
-    
-    def MSE(self):
-        MSE = sum((self.z-self.znew)**2)/(len(self.z))
-        return MSE
-    
-    def R2(self):
-        self.R2 = 1-(np.sum((self.z - self.znew)**2)/np.sum((self.z-np.mean(self.z))**2))
-        return self.R2
