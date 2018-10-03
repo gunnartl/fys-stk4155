@@ -57,6 +57,6 @@ class regression:
     def lasso(self, lambd):
         lasso = linear_model.Lasso(alpha = lambd,fit_intercept = False)
         lasso.fit(self.X, self.z)
-        beta = lasso.coef_
+        beta = lasso.coef_[:,np.newaxis]
         self.znew = self.X.dot(beta)
         return beta
