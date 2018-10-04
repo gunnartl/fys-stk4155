@@ -1,0 +1,112 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{biblatex}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{verbatim} 
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tikz}
+% \usepackage{physics}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{comment}
+\usepackage{subfig}
+\usepackage{geometry}
+
+%biblatex
+\iffalse
+\usepackage[
+backend=bibtex
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+\fi
+\addbibresource{refs.bib}
+
+%listings
+\lstset{language=c++}
+\lstset{basicstyle=\small}
+\lstset{backgroundcolor=\color{white}}
+\lstset{frame=single}
+\lstset{stringstyle=\ttfamily}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+\lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}}
+
+%tikz
+\setcounter{secnumdepth}{4}
+\usetikzlibrary{through, shapes, calc, shapes, arrows, positioning, er}
+\tikzstyle{neuron}=[draw,circle,minimum size=20pt,inner sep=0pt, fill=white]
+\tikzstyle{stateTransition}=[thick]
+\tikzstyle{learned}=[text=red]
+
+\title{FYS-STK4155 Proj1}
+\author{tobias }
+\date{October 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\section{Theory}
+
+\subsection{Machine learning}
+In short, the goal of many machine algorithms is to fit curves to data in order to describe the data in the best possible way. In general, almost all ML-problems one has the same ingredients: the dataset $\hat{X}$, the model $g(\vec{w})$ which is a function of the parameters $\vec{w}$ and the cost function Q($\hat{X}$, g($\vec{w}$)). The cost function tells us how good of a fit the model is to the data. The model is fit by finding the $\vec{w}$ that minimizes the cost function. The subfield of machine learning that is concerned with drawing lines to describe data is called regression \newline
+
+One would go about this by first dividing the dataset $\hat{X}$ randomly into two independent groups, the training set $\hat{X}_{train}$ and the test set $\hat{X}_{test}$. Usually, most of the data will be put in the training set and what is left will go in the test set. Intuitively enough, the training set is the dataset in which we train our model on before testing our model on the test set. In order to get the best model we possible can from the finite number of datapoints we have, it then makes sense that the training set should make up the bigger part of our total dataset.
+
+\subsection{Linear regression}
+
+\subsection{Ordinary least squares}
+In order to explain the method of ordinary least squares, assume that we can parametrize our function in terms of a polynomial of degree p with n points. That is, we have a dataset $(x_1, y_1), (x_2, y_2),..., (x_n, y_n)$ and we assume that $y = y(x) \rightarrow y(x_i) = \tilde{y_i} + \varepsilon_i = \sum_{j=1}^p{\beta_i x_i^j} + \varepsilon_i$ where $\tilde{y_i}$ is our approximation and $\varepsilon_i$ is the error in our approximation [Lecture notes: Linear regression and more advanced regression analysis].\newline
+This fitting procedure can be rewritten as a linear algebra problem. We get the corresponding set of equations: 
+\begin{align*}
+y_1&=\beta_0x_1^0+\beta_1x_1^1+\hdots+\beta_px_1^p+\varepsilon_1\\
+y_2&=\beta_0x_2^0+\beta_1x_2^1+\hdots+\beta_px_2^p+\varepsilon_2\\
+\vdots\\
+y_n&=\beta_0x_n^0+\beta_1x_n^1+\hdots+\beta_px_n^p+\varepsilon_n,
+\end{align*}
+
+and this set of equations can again be rewritten as:
+\begin{equation}
+\vec{y}=\hat{X}\vec{\beta}+\vec{\varepsilon},
+\label{eq:y_xb}
+\end{equation}
+where
+\begin{equation}
+\hat{X}=\begin{pmatrix}
+x_1^0&x_1^1&x_1^2&\hdots&x_1^p\\
+x_2^0&x_2^1&x_2^2&\hdots&x_2^p\\
+\vdots&\vdots&\vdots&\ddots&\vdots\\
+x_n^0&x_n^1&x_n^2&\hdots&x_n^p
+\end{pmatrix}
+\end{equation}
+is the design matrix, $\vec{\beta}=(\beta_0, \beta_1, \hdots, \beta_p)^T$ is the vector of the corresponding coefficients and $\vec{\varepsilon} = (\varepsilon_0, \varepsilon_1,..., \varepsilon_n)^T$.\newline
+We also use this to define our approximation $\tilde{y}$ as: $\vec{\tilde{y}} = \hat{X}\vec{\beta}$, where $\vec{\beta}$ is still unknown.\newline
+It is worth mentioning at this point that it is possible to find the coefficients through a matrix relation called the normal equation:
+\begin{equation}
+\vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{y},
+\end{equation}
+but this quickly gets unproductive when there are a high number of variables involved. A better way might be to find the optimal parameters $\beta_i$ by minimizing the cost function. Because the cost function characterizes how good or bad our predictor is, minimizing this function will also minimize the error and thereby give the optimal $\vec{\beta}$.
+We use the standard cost function given by least squares:
+\begin{equation}
+Q(\vec{\beta})=\sum_{i=1}^{n}(y_i-\tilde{y}_i)^2=(\vec{y}-\hat{X}\vec{\beta})^T(\vec{y}-\hat{X}\vec{\beta}).
+\end{equation}
+In order to find the minimum of the cost function it is common to use an algorithm called gradient descent, which we will come back to in the Methods section.
+
+
+\end{document}
