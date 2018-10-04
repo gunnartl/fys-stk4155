@@ -5,6 +5,9 @@ from numba import jit
 
 @jit
 def polynomial_this(x,y,n):
+    if x.shape[1] != 1 and x.shape[0] !=1:
+        x = x.ravel()
+        y = y.ravel()
     X = np.c_[np.ones(len(x))]
     for i in range(1,n+1):
         X = np.c_[X,x**(i)]
@@ -17,12 +20,6 @@ def bias(true, pred):
     bias = np.mean((true - np.mean(pred))**2)
     return bias
 
-
-         
-def variance(pred):
-    var = np.var(pred)
-    return var
-
     
 def MSE(true, pred):
     MSE = sum((true-pred)**2)/(len(true))
@@ -31,6 +28,22 @@ def MSE(true, pred):
 def R2(true, pred):
     R2 = 1-(np.sum((true - pred)**2)/np.sum((true-np.mean(pred))**2))
     return R2
+
+def KfoldCrossVal(dataset, dataset2, Numbfold):
+    """
+    Takes in two coupled datasets and returns them splitted into k-matching 
+    """
+    indices = np.arange(len(dataset[:, 0]))
+    random_indices = np.random.choice(indices, size = len(dataset[:, 0]), replace = False)
+    interval = int(len(dataset[:, 0])/Numbfold)
+    datasetsplit = []
+    dataset2split = []
+    for k in range(Numbfold):
+        datasetsplit.append(dataset[random_indices[interval*k : interval*(k + 1)]]) 
+        dataset2split.append(dataset2[random_indices[interval*k : interval*(k + 1)]])
+
+    return np.asarray(datasetsplit), np.asarray(dataset2split) 
+
 
 class regression:
     def __init__(self,X,z):
@@ -57,10 +70,9 @@ class regression:
     def lasso(self, lambd):
         lasso = linear_model.Lasso(alpha = lambd,fit_intercept = False)
         lasso.fit(self.X, self.z)
-        beta = lasso.coef_[:,np.newaxis]
+        beta = lasso.coef_
         self.znew = self.X.dot(beta)
         return beta
-<<<<<<< HEAD
 
          
     def beata_variance(self):
@@ -109,5 +121,22 @@ class regression:
     def term(self):
         term = 2*sum((self.z-np.mean(self.znew))*(np.mean(self.znew)-self.znew))/len(self.z)
         return term
-=======
->>>>>>> 0417592c0fb58e7bcaf2491b383ffcc345fca63e
+
+
+def FRANK(x, y):
+    """
+    Frankie function for testing the class
+    """
+    term1 = 0.75*np.exp(-(0.25*(9*x - 2)**2) - 0.25*((9*y-2)**2))
+    term2 = 0.75*np.exp(-((9*x + 1)**2)/49.0 - 0.1*(9*y+1))
+    term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
+    term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
+    return term1 + term2 + term3 + term4    
+    
+
+
+if __name__== "__main__" :
+    def test_reg():
+        a = 3
+        
+    
