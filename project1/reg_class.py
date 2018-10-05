@@ -5,9 +5,6 @@ from numba import jit
 
 @jit
 def polynomial_this(x,y,n):
-    if x.shape[1] != 1 and x.shape[0] !=1:
-        x = x.ravel()
-        y = y.ravel()
     X = np.c_[np.ones(len(x))]
     for i in range(1,n+1):
         X = np.c_[X,x**(i)]
