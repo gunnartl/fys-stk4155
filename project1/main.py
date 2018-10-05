@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 import reg_class as Reg2
 from reg_class import FRANK, KfoldCrossVal
 
-n = 50
+n = 100
 Numbdeg = 15
 Numbfolds = 100
 
@@ -52,8 +52,8 @@ for i in range(Numbfolds):
         #Xiterate = XTrainSets[:]
         #print(Xiterate.shape,int((k+2)*(k+1)/2),k)
         Frankiterate = Reg2.regression(Xiterate, zTrainSets)
-        betas = Frankiterate.OLS()
-        X_holdout_k = Reg2.polynomial_this(x_holdout,y_holdout,k)
+        betas = Frankiterate.ridge(0.001)
+        X_holdout_k = X_holdout[:,:cumsum]#Reg2.polynomial_this(x_holdout,y_holdout,k)
         zPred = np.dot(X_holdout_k, betas)
 
         z_mean[i,k,:] = zPred.squeeze()

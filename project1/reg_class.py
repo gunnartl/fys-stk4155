@@ -115,12 +115,6 @@ class regression:
     def R2(self):
         self.R2 = 1-(np.sum((self.z - self.znew)**2)/np.sum((self.z-np.mean(self.z))**2))
         return self.R2
-    def bias(self):
-        bias = np.mean((self.z-np.mean(self.znew))**2)
-        return bias
-    def term(self):
-        term = 2*sum((self.z-np.mean(self.znew))*(np.mean(self.znew)-self.znew))/len(self.z)
-        return term
 
 
 def FRANK(x, y):

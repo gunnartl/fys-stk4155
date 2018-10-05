@@ -6,8 +6,8 @@ R2_vec  = np.zeros_like(MSE)
 
 for i in range(20):
     print(i)
-    for j in range(200):
-        n = (i+11)
+    for j in range(100):
+        n = (i+13)
         x = np.sort((np.random.rand(n)))
         y = np.sort((np.random.rand(n)))
         
