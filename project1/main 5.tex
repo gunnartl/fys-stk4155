@@ -1,0 +1,209 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{biblatex}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{verbatim} 
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tikz}
+% \usepackage{physics}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{comment}
+\usepackage{subfig}
+\usepackage{geometry}
+
+%biblatex
+\iffalse
+\usepackage[
+backend=bibtex
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+\fi
+\addbibresource{refs.bib}
+
+%listings
+\lstset{language=c++}
+\lstset{basicstyle=\small}
+\lstset{backgroundcolor=\color{white}}
+\lstset{frame=single}
+\lstset{stringstyle=\ttfamily}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+\lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}}
+
+%tikz
+\setcounter{secnumdepth}{4}
+\usetikzlibrary{through, shapes, calc, shapes, arrows, positioning, er}
+\tikzstyle{neuron}=[draw,circle,minimum size=20pt,inner sep=0pt, fill=white]
+\tikzstyle{stateTransition}=[thick]
+\tikzstyle{learned}=[text=red]
+
+\title{FYS-STK4155 Proj1}
+\author{tobias }
+\date{October 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+
+\section{Introduction}
+
+\section{Theory}
+
+\subsection{Machine learning}
+In short, the goal of many machine algorithms is to fit curves to data in order to describe the data in the best possible way. In general, almost all ML-problems one has the same ingredients: the dataset $\hat{X}$, the model $g(\vec{w})$ which is a function of the parameters $\vec{w}$ and the cost function Q($\hat{X}$, g($\vec{w}$)). The cost function tells us how good of a fit the model is to the data. The model is fit by finding the $\vec{w}$ that minimizes the cost function. One possible method for minimizing the cost function is the gradient descent method. The subfield of machine learning that is concerned with drawing lines to describe data is called regression \newline
+
+One would go about this by first dividing the dataset $\hat{X}$ randomly into two independent groups, the training set $\hat{X}_{train}$ and the test set $\hat{X}_{test}$. Usually, most of the data will be put in the training set and what is left will go in the test set. Intuitively enough, the training set is the dataset in which we train our model on before testing our model on the test set. In order to get the best model we possible can from the finite number of datapoints we have, it then makes sense that the training set should make up the bigger part of our total dataset.
+
+\subsection{Statistical background}
+It is necessary to mention a few statistical quantities that will be needed later. First off, the mean of a dataset $(y_1, ..., y_n)$ is given by
+\begin{equation}
+\bar{y}=\sum_{i=1}^n y_i
+\end{equation}
+secondly, the variance of the dataset is given by
+\begin{equation}
+Var(y)=\frac{1}{n}\sum_{i=1}^n(y_i-\bar{y})^2
+\end{equation}
+The variance tells us how far the set of datapoints is spread out. More precisely it describes how much a random datapoint differs from it's expected value. \newline
+
+
+\subsection{Linear regression}
+
+\subsubsection{Ordinary least square regression}
+In order to explain the method of ordinary least squares, assume that we can parametrize our function in terms of a polynomial of degree p with n points. That is, we have a dataset $(x_1, y_1), (x_2, y_2),..., (x_n, y_n)$ and we assume that $y = y(x) \rightarrow y(x_i) = \tilde{y_i} + \varepsilon_i = \sum_{j=1}^p{\beta_i x_i^j} + \varepsilon_i$ where $\tilde{y_i}$ is our approximation and $\varepsilon_i$ is the error in our approximation [Lecture notes: Linear regression and more advanced regression analysis].\newline
+This fitting procedure can be rewritten as a linear algebra problem. We get the corresponding set of equations: 
+\begin{align*}
+y_1&=\beta_0x_1^0+\beta_1x_1^1+\hdots+\beta_px_1^p+\varepsilon_1\\
+y_2&=\beta_0x_2^0+\beta_1x_2^1+\hdots+\beta_px_2^p+\varepsilon_2\\
+\vdots\\
+y_n&=\beta_0x_n^0+\beta_1x_n^1+\hdots+\beta_px_n^p+\varepsilon_n,
+\end{align*}
+
+and this set of equations can again be rewritten as:
+\begin{equation}
+\vec{y}=\hat{X}\vec{\beta}+\vec{\varepsilon},
+\label{eq:y_xb}
+\end{equation}
+where
+\begin{equation}
+\hat{X}=\begin{pmatrix}
+x_1^0&x_1^1&x_1^2&\hdots&x_1^p\\
+x_2^0&x_2^1&x_2^2&\hdots&x_2^p\\
+\vdots&\vdots&\vdots&\ddots&\vdots\\
+x_n^0&x_n^1&x_n^2&\hdots&x_n^p
+\end{pmatrix}
+\end{equation}
+is the design matrix, $\vec{\beta}=(\beta_0, \beta_1, \hdots, \beta_p)^T$ is the vector of the corresponding coefficients and $\vec{\varepsilon} = (\varepsilon_0, \varepsilon_1,..., \varepsilon_n)^T$.\newline
+We also use this to define our approximation $\tilde{y}$ as: $\vec{\tilde{y}} = \hat{X}\vec{\beta}$, where $\vec{\beta}$ is still unknown.\newline
+It is worth mentioning at this point that it is possible to find the coefficients through a matrix relation called the normal equation:
+\begin{equation}
+\vec{\beta}=(\hat{X}^T\hat{X})^{-1}\hat{X}^T\vec{y},
+\end{equation}
+but this quickly gets unproductive when there are a high number of variables involved. A better way might be to find the optimal parameters $\beta_i$ by minimizing the cost function. Because the cost function characterizes how good or bad our predictor is, minimizing this function will also minimize the error and thereby give the optimal $\vec{\beta}$.
+We use the standard cost function given by least squares:
+\begin{equation}
+Q(\vec{\beta})=\sum_{i=1}^{n}(y_i-\tilde{y}_i)^2=(\vec{y}-\hat{X}\vec{\beta})^T(\vec{y}-\hat{X}\vec{\beta}).
+\end{equation}
+In order to find the minimum of the cost function it is common to use an algorithm called gradient descent, which we will come back to in the Methods section.\newline
+
+The ordinary least squares method works fine in a lot of cases, but..
+
+\subsubsection{Ridge regression}
+Although ordinary least squares is a very useful method in some cases, it has some limitations. One of the limitations are easy to see when the design matrix $\Hat{X}$ is high-dimensional. In that case one can not generally assume that the columns of $\Hat{X}$ are linearly independent, with the consequence that $\Hat{X}^T\Hat{X}$ might be singular (non-invertible). It's a problem that $\Hat{X}^T\Hat{X}$ is singular because the ordinary least squares method is bad at handling near singular or singular matrices. One might then encounter a situation where the coefficients $\beta_i$ can't be estimated.\newline
+The "fix" for this problem is to simply add a diagonal term to the matrix $\Hat{X}^T\Hat{X}$ that we wish to invert, as so: $\Hat{X}^T\Hat{X} \rightarrow \Hat{X}^T\Hat{X} + \lambda \Hat{I}$, where $\lambda$ is the penalty term and $\Hat{I}$ is the identity matrix. This is called ridge regression. Our new expression for the coefficients will then be
+\begin{equation}
+\vec{\beta}_{\text{ridge}}=(\hat{X}^T\hat{X}+\lambda \Hat{I})^{-1}\hat{X}^T\vec{\beta}.
+\end{equation}
+
+Ridge regression thus has two main benefits over ordinary least squares regression: Firstly, adding a penalty term reduces overfitting. It doesn't penalize the coefficients $\beta_i$ arbitrarily, but chooses them in such a way that less influential $\beta_i$'s get penalized more than those with more influence.\newline  
+Second, the penalty term guarantees that we can find a solution.
+
+
+\subsubsection{Lasso regression}
+
+\subsection{Error estimates}
+In order to properly analyse and interpret the results of our approach, error analysis is very important. There are several possible ways to do an error estimate, but in this project we will mainly concern ourselves with the mean square error (MSE) and the $R^2$ score function.\newline
+
+The mean squared error tells us how close the regression curve is the to set of datapoints. It is called the mean squared error because one is finding the mean of a set of errors. In essence one would typically want the MSE to be as small as possible.
+
+\begin{equation}
+\text{MSE}(\tilde{y})=\frac{1}{n}\sum_{i=1}^n(y_i-\tilde{y_i})^2
+\end{equation}
+
+The $R^2$ score function also measures how close the fitted regression curve is to the data, and is in that regard similar to the mean square error. More explicit the $R^2$ score function is defined as the percentage of the variaton in the dataset (?) that is explained by the model [ref:http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit]:
+\begin{equation}
+\text{R}^2=\frac{\text{Explained variation}}{\text{Total variation}} = 1-\frac{\sum_{i=1}^N(y_i-\tilde{y})^2}{\sum_{i=1}^N(y_i-\bar{y})^2}
+\end{equation}
+
+This means that the $R^2$ score always will be between zero and one. If $R^2 = 0$ it means that the model doesn't explain the variations in the data (around it's mean) at all, and if $R^2 = 1$ it means that the model explains all the variations in the data (again around it's mean). Therefore one would in general like to have a $R^2$ score as close to one as possible.\newline
+
+Another important quantity is the bias, which measures how much the model $\tilde{y}$ differs from the actual dataset $y$. Because the bias measures the errors due to simplifying assumptions of our model $\tilde{y}$, a high bias is related to underfitting. Our dataset could for example make out some kind of curve, but because our model isn't complex enough or haven't been trained enough, it fails to follow the curve in an explanatory way. This is a serious problem because it can make us miss important characteristics of the data set.
+
+The bias can be calculated from the expression
+\begin{equation}
+\text{bias}(\tilde{y})=\frac{1}{n}\sum_{i=1}^N(\tilde{y}_i - y_i)
+\end{equation}
+
+The connection between MSE, variance and bias is one of importance. It can be shown that the so-called bias-variance tradeoff(or bias-variance decomposition) can be written:
+\begin{equation}
+\text{MSE}(\tilde{y})=\text{bias}(\tilde{y})^2 + \text{var}(\tilde{y}) +\sigma^2
+\end{equation}
+where the bias and variance are as given by the aforementioned expressions. The $\sigma^2$ term is an irreducible error. It comes directly from the noise in our training data, and because real data always will have some noise, it is unavoidable.\newline
+
+As mentioned above, a high bias is typically related to underfitting. When trying to avoid underfitting it is important not to start overfitting instead.
+A high variance often corresponds to overfitting of the model, meaning that the model is too complex compared to the dataset it is supposed to approximate. Overfit can be a consequence of overtraining, where the model have been trained too much on the training data. This makes the model inclined to follow every little twist and turn of the dataset, and "sticking too closely" to it. The problem with this is that it makes the model bad at generalizing to new data. In other words, an overfit model may perform very well on the training data, but perform very poorly when tested on new data.
+
+\section{Methods}
+\subsection{Resampling techniques}
+Resampling is a technique that is widely used in modern statistics. The technique consists of drawing repeated samples from a training set and then fitting your model to each sample [https://compphysics.github.io/MachineLearning/doc/pub/Regression/pdf/Regression-minted.pdf, page 23]. The point is to get as much use out of your finite dataset as you can. This method might reveal information about the fitted model that would not have been discovered otherwise.\newline
+Although resampling has several advantages, it might also be computationally expensive because of the repetetive nature of the technique.
+There exists several resampling methods, such as the bootstrap method, jacknife resampling and the k-fold cross validation method. In this project we have chosen to focus on the k-fold cross validation method.
+
+\subsubsection{The k-fold cross validation method}
+In addition to what's already been mentioned, k-fold cross validation can be used to estimate the potency of the model. Compared to other resampling methods it is relatively easy to understand and to implement. The k in the method's name refers to the number of groups to split the data in. The value of k is chosen in such a way that the training/test sets are large enough to be statistically representative for the whole dataset.\newline
+
+The general approach is as follows:\newline
+
+1. Shuffle the dataset randomly\newline
+
+2. Split the dataset into k independent groups (folds)\newline
+
+3. Define (for example) the first $k-1$ folds as training data and leave out the k-th fold as test data. Then one can test the model on the test set (the k-th fold).\newline
+
+4. Next take $k-1$ folds as training data once again, but this time include the fold that was used as test data in step 3 in the training data. Then test the model again on the new test set.\newline
+
+5. Repeat until all k folds have been used as test data. One will then in the end have accumulated a sample of model evaluation scores (for example by using MSE or the $R^2$ score) \newline
+
+6. Lastly the skill of the model can be estimated by using the sample of model evaluation scores.\newline
+
+[https://machinelearningmastery.com/k-fold-cross-validation/]
+
+\subsection{Minimization methods/Gradient descent?}
+Kanskje drite i denne seksjonen
+
+\section{Results}
+
+\section{Discussion}
+Sammenlign plot for de forskjellige metodene (Ridge, lasso, OSL). Analyser plot mht MSE, bias og variance og bias-variance decomposition.
+
+\section{Conclusion}
+
+
+
+\end{document}
