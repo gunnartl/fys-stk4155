@@ -131,12 +131,12 @@ It is necessary to mention a few statistical quantities that will be needed late
 \end{equation}
 secondly, the variance of the dataset is given by
 \begin{equation}
-\sigma_y^2=\frac{1}{n}\sum_{i=1}^n(y_i-\bar{y})^2
+Var(y)=\frac{1}{n}\sum_{i=1}^n(y_i-\bar{y})^2
 \end{equation}
-The variance tells us how far the set of datapoints is spread out. More precisely it describes how much a random datapoint differs from it's expected value.\newline
+The variance tells us how far the set of datapoints is spread out. More precisely it describes how much a random datapoint differs from it's expected value. \newline
 
 \subsection{Error estimates}
-In order to properly analyse and interpret the results of our approach, error analysis is very important. There are several possible ways to do an error estimate, but in this project we will only concern ourselves with the mean square error (MSE) and the $R^2$ score function.\newline
+In order to properly analyse and interpret the results of our approach, error analysis is very important. There are several possible ways to do an error estimate, but in this project we will mainly concern ourselves with the mean square error (MSE) and the $R^2$ score function.\newline
 
 The mean squared error tells us how close the regression curve is the to set of datapoints. It is called the mean squared error because one is finding the mean of a set of errors. In essence one would typically want the MSE to be as small as possible.
 
@@ -151,12 +151,26 @@ The $R^2$ score function also measures how close the fitted regression curve is 
 
 This means that the $R^2$ score always will be between zero and one. If $R^2 = 0$ it means that the model doesn't explain the variations in the data (around it's mean) at all, and if $R^2 = 1$ it means that the model explains all the variations in the data (again around it's mean). Therefore one would in general like to have a $R^2$ score as close to one as possible.\newline
 
-Another important quantity is the bias, which measures how much the model $\tilde{y}$ differs from the actual dataset $y$. Because it measures the errors due to simplifying assumptions of our model $\tilde{y}$, a high bias is related to underfitting.  It can be calculated form the expression
+Another important quantity is the bias, which measures how much the model $\tilde{y}$ differs from the actual dataset $y$. Because the bias measures the errors due to simplifying assumptions of our model $\tilde{y}$, a high bias is related to underfitting. Our dataset could for example make out some kind of curve, but because our model isn't complex enough or haven't been trained enough, it fails to follow the curve in an explanatory way. This is a serious problem because it can make us miss important characteristics of the data set.
+
+The bias can be calculated from the expression
 \begin{equation}
 \text{bias}(\tilde{y})=\frac{1}{n}\sum_{i=1}^N(\tilde{y}_i - y_i)
 \end{equation}
 
+The connection between MSE, variance and bias is one of importance. It can be shown that the so-called bias-variance tradeoff(or bias-variance decomposition) can be written:
+\begin{equation}
+\text{MSE}(\tilde{y})=\text{bias}(\tilde{y})^2 + \text{var}(\tilde{y}) +\sigma^2
+\end{equation}
+where the bias and variance are as given by the aforementioned expressions. The $\sigma^2$ term is an irreducible error. It comes directly from the noise in our training data, and because real data always will have some noise, it is unavoidable.\newline
+
+As mentioned above, a high bias is typically related to underfitting. When trying to avoid underfitting it is important not to start overfitting instead.
+A high variance often corresponds to overfitting of the model, meaning that the model is too complex compared to the dataset it is supposed to approximate. Overfit can be a consequence of overtraining, where the model have been trained too much on the training data. This makes the model inclined to follow every little twist and turn of the dataset, and "sticking too closely" to it. The problem with this is that it makes the model bad at generalizing to new data. In other words, an overfit model may perform very well on the training data, but perform very poorly when tested on new data.
+
+
+Skriv om bias-variance tradeoff/bias-variance decomposition og sammenhengen med underfitting/overfitting
 
 \section{Methods}
+Skriv om resampling teknikker og gradient descent
 
 \end{document}
