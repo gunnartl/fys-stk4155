@@ -52,7 +52,7 @@ for i in range(Numbfolds):
         #Xiterate = XTrainSets[:]
         #print(Xiterate.shape,int((k+2)*(k+1)/2),k)
         Frankiterate = Reg2.regression(Xiterate, zTrainSets)
-        betas = Frankiterate.ridge(0.001)
+        betas = Frankiterate.OLS()
         X_holdout_k = X_holdout[:,:cumsum]#Reg2.polynomial_this(x_holdout,y_holdout,k)
         zPred = np.dot(X_holdout_k, betas)
 
@@ -77,8 +77,9 @@ import matplotlib.pyplot as plt
 plt.plot(error,"--")
 plt.plot(bias)
 plt.plot(variance)
-
+plt.title("Bias-Variance tradof")
 plt.legend(["error","bias","variance"])
+plt.xlabel("Complexity of polynomial")
 plt.semilogy()
 #plt.semilogx()
 plt.show()
