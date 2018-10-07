@@ -1,6 +1,15 @@
 import reg_class
 from reg_class import*
 
+"""
+Gir et lambda - r2 plott av OLS, rigde og lasso. Med noise = 0 gir det to 
+nesten overlappende kurver for test og train dataene og med noise f.eks= 0.5
+gir det litt dårlige resultater for testdataene
+
+De stiplede liniene i plottet er Testdataene , de heltrukene er Treningsdataene
+"""
+Noise = 0.5
+
 R2_test  = np.zeros((3,13,50))
 R2_train = np.zeros_like(R2_test)
 #R2_vec  = np.zeros_like(MSE_vec)
@@ -15,7 +24,7 @@ for i in range(len(lambdas)):
         x,y = np.meshgrid(x,y)
         
         deg = 5
-        z = reg_class.FRANK(x.ravel(),y.ravel()) +0.5*np.random.randn(n*n,)
+        z = reg_class.FRANK(x.ravel(),y.ravel()) +Noise*np.random.randn(n*n,)
         X = polynomial_this(x.ravel(),y.ravel(),deg)
         from sklearn.model_selection import train_test_split
         X,X_test,z,z_test = train_test_split(X, z, test_size = 0.3)
@@ -49,6 +58,7 @@ plt.plot(lambdas,R2_mean_test[1],"steelblue",linestyle="-.")
 plt.plot(lambdas,R2_mean_test[2],"yellowgreen",linestyle="-.")
 plt.legend(["OLS","RIDGE","lasso"])
 plt.semilogx()
+plt.title("R2 as a function of Lambda for a rather noisy Franke-function")
 plt.xlabel("$\lambda$")
 plt.ylabel("R2-score")
 plt.show()
