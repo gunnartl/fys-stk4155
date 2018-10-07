@@ -84,33 +84,7 @@ class regression:
         covar = np.linalg.inv(self.X.T.dot(self.X))*sigma2
         var = np.diagonal(covar)
         return beta_var
-    
-    def variance(self):
-        var = np.mean((self.znew-np.mean(self.znew))**2)
-        return var
 
-
-    def plot(self):
-        plutt = self.znew.reshape((self.n,self.n))
-        x = self.x.reshape((self.n,self.n))
-        y = self.y.reshape((self.n,self.n))
-        from mpl_toolkits.mplot3d import Axes3D
-        from matplotlib.ticker import LinearLocator, FormatStrFormatter
-        import matplotlib.pyplot as plt
-        from matplotlib import cm
-        fig = plt.figure()
-        ax = fig.gca(projection="3d")
-        # Plot the surface.
-        surf = ax.plot_surface(x,y,plutt, cmap=cm.coolwarm,
-                               linewidth=0, antialiased=False)
-        # Customize the z axis.
-        #ax.set_zlim(-0.10, 1.40)
-        ax.zaxis.set_major_locator(LinearLocator(10))
-        ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
-        # Add a color bar which maps values to colors.
-        fig.colorbar(surf, shrink=0.5, aspect=5)
-        plt.show()
-        return plutt
     
     def MSE(self):
         MSE = np.mean((self.z-self.znew)**2)
