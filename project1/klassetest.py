@@ -5,12 +5,14 @@ from sklearn.linear_model import LinearRegression
 from numba import jit
 from reg_class import regression,polynomial_this
 from sklearn import linear_model
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 
 from imageio import imread
 
 # Load the terrain
 terrainfull = np.array(imread("SRTM_data_Norway_1.tif"))
-terrain1 = terrainfull[1000:2000,800:1800]
+terrain1 = terrainfull#[1000:2000,800:1800]
 tx = np.linspace(0,1,terrain1.shape[0])
 ty = np.linspace(0,1,terrain1.shape[1])
 
