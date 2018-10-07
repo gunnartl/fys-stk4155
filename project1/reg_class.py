@@ -29,6 +29,13 @@ def R2(true, pred):
 def KfoldCrossVal(dataset, dataset2, Numbfold):
     """
     Takes in two coupled datasets and returns them splitted into k-matching 
+    "folds" by produsing randomindices. 
+    
+    KfoldCrosVal([1,4,5,6],[7,6,8,5],2) may return
+    
+    [[1,5],[4,6]], [[7,8],[6,2]]
+    
+    by produsing the indices [[0,2],[1,3]]
     """
     indices = np.arange(len(dataset[:, 0]))
     random_indices = np.random.choice(indices, size = len(dataset[:, 0]), replace = False)
