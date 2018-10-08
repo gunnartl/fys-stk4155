@@ -5,6 +5,10 @@ from numba import jit
 
 @jit
 def polynomial_this(x,y,n):
+    """
+    Lager designmatrise for for en funksjon av to variabler
+    for alle polynomer opp til og med grad n
+    """
     X = np.c_[np.ones(len(x))]
     for i in range(1,n+1):
         X = np.c_[X,x**(i)]
