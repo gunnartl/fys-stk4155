@@ -5,9 +5,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import reg_class as Reg
 from reg_class import FRANK, KfoldCrossVal
-
+from imageio import imread
 n = 50
-Numbdeg = 8
+deg = 8
 Numbfolds = 5
 lambd = 0.00001
 
@@ -19,20 +19,16 @@ for å få et ca like bra resultat som OLS. høyere grad på polynom gir ikke s�
 
 """
 
-deg = Numbdeg
-x = np.sort((np.random.rand(n)))
-y = np.sort((np.random.rand(n)))
+terrainfull = np.array(imread("SRTM_data_Norway_1.tif"))
+z = terrainfull[1000:1200,800:1100]
+tx = np.linspace(0,1,z.shape[0])
+ty = np.linspace(0,1,z.shape[1])
+tx,ty = np.meshgrid(tx,ty)
+tx1d = tx.ravel()
+ty1d = ty.ravel()
+z1d = z.ravel()
 
-x, y = np.meshgrid(x,y)
-
-x1d = x.reshape((n**2, 1))
-y1d = y.reshape((n**2, 1))
-
-error = 0.1*np.random.randn(n**2, 1)
-
-z = FRANK(x1d,y1d) + error
-
-X = Reg.polynomial_this(x1d, y1d, deg)
+X = Reg.polynomial_this(tx1d,ty1d,deg)
 
 
 
@@ -41,11 +37,6 @@ x_holdout = X_holdout[:,1]
 y_holdout = X_holdout[:,2]
 
 X_Split, z_Split = KfoldCrossVal(X, z, Numbfolds)
-
-z_mean =np.zeros((Numbfolds,Numbdeg,len(X_holdout)))
-
-R2  = np.zeros(Numbfolds)
-MSE = np.zeros(Numbfolds)
 
     
 for i in range(Numbfolds):

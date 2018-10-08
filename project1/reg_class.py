@@ -39,7 +39,7 @@ def KfoldCrossVal(dataset, dataset2, Numbfold):
     
     [[1,5],[4,6]], [[7,8],[6,2]]
     
-    by produsing the indices [[0,2],[1,3]]
+    by produsing the indices [[0,2],[1,3]] from input "dataset"
     """
     indices = np.arange(len(dataset[:, 0]))
     random_indices = np.random.choice(indices, size = len(dataset[:, 0]), replace = False)
@@ -78,7 +78,7 @@ class regression:
     def lasso(self, lambd):
         lasso = linear_model.Lasso(alpha = lambd,fit_intercept = False)
         lasso.fit(self.X, self.z)
-        beta = lasso.coef_
+        beta = lasso.coef_[:,np.newaxis]
         self.znew = self.X.dot(beta)
         return beta
 
