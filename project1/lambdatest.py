@@ -37,8 +37,8 @@ for i in range(len(lambdas)):
         OLS_beta = FRANK.OLS()
         R2_test[0,i,j] = R2(z_test,X_test.dot(OLS_beta))
         R2_train[0,i,j] = R2(z,X.dot(OLS_beta))
-        MSE_test[1,i,j] = MSE(z_test,X_test.dot(ridge_beta))
-        MSE_train[1,i,j] = MSE(z,X.dot(ridge_beta))        
+        MSE_test[0,i,j] = MSE(z_test,X_test.dot(OLS_beta))
+        MSE_train[0,i,j] = MSE(z,X.dot(OLS_beta))        
 
         
         ridge_beta = FRANK.ridge(lambdas[i])
