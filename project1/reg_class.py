@@ -83,7 +83,7 @@ class regression:
         sigma2 = (1./(len(self.z)-self.X.shape[1]-1))*sum((self.z-self.znew)**2)
         covar = np.linalg.inv(self.X.T.dot(self.X))*sigma2
         var = np.diagonal(covar)
-        return beta_var
+        return var
 
     
     def MSE(self):
