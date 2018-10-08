@@ -28,7 +28,8 @@ for j in range(iters):
     
     betas[1,j,:] = FRANK.ridge(0.0005)
 
-    betas[2,j,:] = FRANK.lasso(0.0005)
+    betas[2,j,:] = FRANK.lasso(0.0005)[:, 0]
+
 
 #%%
 sigma2 = (1./(len(z)-X.shape[1]-1))*sum((z-X.dot(FRANK.OLS()))**2)

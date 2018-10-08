@@ -19,7 +19,7 @@ x, y = np.meshgrid(x,y)
 x1d = x.reshape((n**2, 1))
 y1d = y.reshape((n**2, 1))
 
-error = 0*np.random.randn(n**2, 1)
+error = 0.2*np.random.randn(n**2, 1)
 
 z = FRANK(x1d,y1d) + error
 
