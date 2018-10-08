@@ -8,7 +8,7 @@ gir det litt dårlige resultater for testdataene
 
 De stiplede liniene i plottet er Testdataene , de heltrukene er Treningsdataene
 """
-Noise = 0.5
+Noise = .5
 
 R2_test  = np.zeros((3,13,50))
 R2_train = np.zeros_like(R2_test)

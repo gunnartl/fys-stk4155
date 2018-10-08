@@ -22,7 +22,7 @@ TX = polynomial_this(tx1d,ty1d,deg)
 terreng = regression(TX, terrain11d)
 beta_OLS = terreng.OLS()
 zterreng = TX.dot(beta_OLS) 
-Numbdeg = 20
+Numbdeg = 5
 Variterate = np.zeros(Numbdeg)
 Biasiterate = np.zeros(Numbdeg)
 MSEiterate = np.zeros(Numbdeg)
@@ -57,10 +57,11 @@ Biasterr  = np.zeros(Numbdeg - 1)
 Varianceterr = np.zeros(Numbdeg - 1)
 
 for k in range(len(Xterr_holdout)):
+    print(k)
     for j in range(Numbdeg - 1):
         errorterr[j] = np.mean(MSE(zterr_holdout, z_mean[k, :, j])) 
         Biasterr[j] = bias(zterr_holdout, z_mean[k, :, j])
-        Varianceterr[j] = variance(z_mean[k, :, j])
+        Varianceterr[j] = np.var(z_mean[k, :, j])
 
 
 plt.plot(np.linspace(1, Numbdeg - 1, Numbdeg - 1), Varianceterr, '--', label = 'Var')
