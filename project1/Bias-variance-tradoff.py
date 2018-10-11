@@ -6,9 +6,9 @@ from sklearn.model_selection import train_test_split
 import reg_class as Reg2
 from reg_class import FRANK, KfoldCrossVal
 
-n = 100
-Numbdeg = 15
-Numbfolds = 100
+n = 10
+Numbdeg = 10
+Numbfolds = 5
 
 deg = Numbdeg
 x = np.sort((np.random.rand(n)))

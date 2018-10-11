@@ -2,7 +2,7 @@ import reg_class
 from reg_class import*
 
 n = 100
-deg = 8
+deg = 5
 
 x = np.sort((np.random.rand(n)))
 y = np.sort((np.random.rand(n)))
@@ -14,7 +14,7 @@ y1d = y.reshape((n**2, 1))
 
 
 
-noise = 0.5*np.random.randn(n**2, 1)
+noise = 0.1*np.random.randn(n**2, 1)
 
 z       = FRANK(x1d,y1d)
 z_noise = noicyfrank = z + noise

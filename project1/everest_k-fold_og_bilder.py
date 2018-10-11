@@ -33,7 +33,7 @@ plt.show()
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 fig = plt.figure()
 ax = fig.gca(projection="3d")
-surf = ax.plot_surface(tx,-ty,terrain1.reshape(tx.shape), cmap=cm.coolwarm,
+surf = ax.plot_surface(tx,-ty,terrain1.reshape(tx.shape), cmap="gray",
 linewidth=0, antialiased=False)
 ax.zaxis.set_major_locator(LinearLocator(10))
 ax.zaxis.set_major_formatter(FormatStrFormatter("%.02f"))
@@ -75,7 +75,11 @@ print(R2s,MSEs)
 
 
 endelig_modell = regression(X_full,z_full)
-plott = X_full.dot(endelig_modell.OLS()).reshape(tx.shape)
+OLSbeta = endelig_modell.OLS()
+plott = X_full.dot(OLSbeta).reshape(tx.shape)
+
+print(endelig_modell.R2())
+print(endelig_modell.MSE())
 
 
 from matplotlib.ticker import LinearLocator, FormatStrFormatter

@@ -6,8 +6,8 @@ from sklearn.model_selection import train_test_split
 import reg_class as Reg
 from reg_class import FRANK, KfoldCrossVal
 
-n = 50
-Numbdeg = 8
+n = 100
+Numbdeg = 5
 Numbfolds = 5
 lambd = 0.00001
 
@@ -57,7 +57,7 @@ for i in range(Numbfolds):
         zTrainSets = np.vstack(zTrainSets)
         
         FRANK = Reg.regression(XTrainSets,zTrainSets)
-        betas = FRANK.lasso(lambd)                     # endre metode her ved å skrive OLS, ridge eller lasso (ols tar ikke argument) 
+        betas = FRANK.OLS()                     # endre metode her ved å skrive OLS, ridge eller lasso (ols tar ikke argument) 
         
         
         TEST   = X_holdout.dot(betas) 
@@ -67,4 +67,4 @@ for i in range(Numbfolds):
 R2var  = np.var(R2)
 MSEvar = np.var(MSE)
 
-print(R2,MSE)
+print(np.mean(R2),np.mean(MSE))

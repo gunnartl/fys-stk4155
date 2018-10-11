@@ -66,12 +66,13 @@ for i in range(len(lambdas)):
         
         ridge_beta = FRANK.ridge(lambdas[i])
         ridge_betas[i,j,:] = ridge_beta
+        print(ridge_beta.shape)
         R2_test[1,i,j] = R2(z_test,X_test.dot(ridge_beta))
         R2_train[1,i,j] = R2(z,X.dot(ridge_beta))
         MSE_test[1,i,j] = MSE(z_test,X_test.dot(ridge_beta))
         MSE_train[1,i,j] = MSE(z,X.dot(ridge_beta))
 
-        lasso_beta = FRANK.lasso(lambdas[i])
+        lasso_beta = FRANK.lasso(lambdas[i]).squeeze()
         lasso_betas[i,j,:] = lasso_beta
         R2_test[2,i,j] = R2(z_test,X_test.dot(lasso_beta))
         R2_train[2,i,j] = R2(z,X.dot(lasso_beta))

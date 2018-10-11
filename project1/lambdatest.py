@@ -24,7 +24,7 @@ lasso_betas = np.zeros((len(lambdas),iters,21))
 ridge_betas = np.zeros_like(lasso_betas)
 
 #R2_vec  = np.zeros_like(MSE_vec)
-n = 50
+n = 100
 deg = 5
 for i in range(len(lambdas)):
     print(i)
@@ -37,7 +37,7 @@ for i in range(len(lambdas)):
         z = reg_class.FRANK(x.ravel(),y.ravel()) +Noise*np.random.randn(n*n,)
         X = polynomial_this(x.ravel(),y.ravel(),deg)
 
-        X,X_test,z,z_test = train_test_split(X, z, test_size = 0.3)
+        X,X_test,z,z_test = train_test_split(X, z, test_size = 0.2)
 
         FRANK = regression(X,z)
         OLS_beta = FRANK.OLS()
@@ -54,7 +54,7 @@ for i in range(len(lambdas)):
         MSE_test[1,i,j] = MSE(z_test,X_test.dot(ridge_beta))
         MSE_train[1,i,j] = MSE(z,X.dot(ridge_beta))
 
-        lasso_beta = FRANK.lasso(lambdas[i])
+        lasso_beta = FRANK.lasso(lambdas[i]).squeeze()
         lasso_betas[i,j,:] = lasso_beta
         R2_test[2,i,j] = R2(z_test,X_test.dot(lasso_beta))
         R2_train[2,i,j] = R2(z,X.dot(lasso_beta))
@@ -109,7 +109,7 @@ plt.hold("on")
 #%%
 for i in range(21):
     plt.plot(lambdas[:10],ridge_betas[:10,i])
-plt.title("Development in size of Coefissients for Ridge as a funtion of $\lambda$")
+plt.title("Development in size of coefficients for Ridge as a funtion of $\lambda$")
 plt.xlabel("$\lambda$")
 plt.ylabel("Size of coefs")
 plt.semilogx()
@@ -117,7 +117,7 @@ plt.show()
 
 for i in range(21):
     plt.plot(lambdas[:10],lasso_betas[:10,i])
-plt.title("Development in size of Coefissients for Lasso as a funtion of $\lambda$")
+plt.title("Development in size of coefficients for Lasso as a funtion of $\lambda$")
 plt.xlabel("$\lambda$")
 plt.ylabel("Size of coefs")
 plt.semilogx()
