@@ -1,0 +1,183 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{biblatex}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{verbatim} 
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tikz}
+% \usepackage{physics}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{comment}
+\usepackage{subfig}
+\usepackage{geometry}
+
+%biblatex
+\iffalse
+\usepackage[
+backend=bibtex
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+\fi
+\addbibresource{refs.bib}
+
+%listings
+\lstset{language=c++}
+\lstset{basicstyle=\small}
+\lstset{backgroundcolor=\color{white}}
+\lstset{frame=single}
+\lstset{stringstyle=\ttfamily}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+\lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}}
+
+%tikz
+\setcounter{secnumdepth}{4}
+\usetikzlibrary{through, shapes, calc, shapes, arrows, positioning, er}
+\tikzstyle{neuron}=[draw,circle,minimum size=20pt,inner sep=0pt, fill=white]
+\tikzstyle{stateTransition}=[thick]
+\tikzstyle{learned}=[text=red]
+
+\title{FYS-STK4155 Proj1}
+\author{tobias }
+\date{October 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+
+\section{Introduction}
+
+\section{Theory}
+
+\subsection{Background for the Ising model}
+
+\subsubsection{Ferromagnetic materials}
+In most ordinary materials the magnetic dipoles associated with the atoms have a random orientation. This random distribution of magnetic moment results in approximately zero (macroscopic) magnetic moment. However, in ferromagnetic materials (like iron), a net magnetic moment is produced as a result of the prefered alignment of the atomic spins.
+Spin is a quantum mechanical property of the electron (this is not the only particle that has spin though), and can only be in two different states: pointing up or down. The spin of the electrons in atoms are the source of ferromagnetism, and when many of these spins point in the same direction, it creates a net macroscopic magnetic field.
+The fact that the spins in ferromagnetic materials 'prefer' to be in alignment is based on two fundamental principles: energy minimization and entropy maximization.
+
+\subsubsection{Phase transitions}
+The point where a phase transition takes place is called a critical point and the associated temperature is called the critical temperature $T_C$. The disappearance of a spontaneous magnetization is a typical example of a second-order phase transition. The behaviour around the critical point can be related to the thermodynamical potential Helmholtz' free energy. That being said, in this project we will not worry so much about exactly what happens in the close region around the critical point (where the phase transition happens). We will look at this system as a simple binary system where the system either is in an ordered state (non-zero net magnetization) or unordered state (no net magnetization), in order to do classification of the phases.\newline
+The Ising model system exhibits a phase transition only for two dimensions or higher.
+
+\subsection{The Ising model}
+The Ising model illustrates the system by placing spins pointing either up or down. In the one-dimensional case the spins will simply form a line, while in the two-dimensional case the spins will be placed at regular lattice points as shown in figure 1. We will for the rest of this section focus on the two-dimensional case as it is quick to go from two to one dimension later on. Every different configuration of spins in the lattice is a microstate, and  the total sum of all the the microstates in the system one may call the multiplicity. The lattice is often squared with dimensions $L \times L = N$, where L is the number of spins in each direction and the total number of spins are equal to N. Since each spin has two different directions to be in, the number of possible different configurations of the system is equal to $2^N$. The interactions between the spins are restricted to nearest neighbors only.\newline
+With no external magnetic field present the energy for a specific configuration (state) $i$ is given as:
+\begin{equation}
+    E_i = -J \sum_{<kl>}^{N} s_k s_l
+\end{equation}
+where the symbol $<kl>$ indicates that the sum is over nearest neighbors only, $s_k$ and $s_l$ are the respective nearest neighbour spins. In our discussion the values for the spins will be +1 for spin up and -1 for spin down. J is a coupling constant expressing the strength of the interaction between neighboring spins. For ferromagnetic materials, $J > 0$. It is from (1) easy to see that it is energetically favorable for neighboring spins to be aligned. This fact can lead to the lattice having a net magnetization even in the absence of a magnetic field.\newline
+The magnetization $M_i$ associated with state $i$ is given by:
+\begin{equation}
+    M_i = \sum_{i}^{N}s_i
+\end{equation}
+
+In the case of small systems, the way we treat the spins at the ends of the lattice matters. In this project we will use periodic boundary conditions. This means that the spins at the edges of the lattice are made to interact with the spins at the geometric opposite edges of the lattice.\newline
+
+\begin{figure}[h!]
+  \centering
+  \caption{One possible configuration of spins in a 2x2 Ising model}
+  \includegraphics[width=1.5cm]{2x2-config.png}
+\end{figure}
+
+\subsection{Neural networks}
+\subsubsection{Multilayer perceptrons}
+One often uses so-called fully connected feed-forward neural networks with three or more layers (an input layer, one or more hidden layers and an output layer) consisting of neurons that have non-linear activation functions. Such networks are often called multilayer perceptrons (MLPs).\newline
+
+The multilayer perception model is a very popular approach because it is relatively easy to implement. The model consists of:\newline
+
+1. A neural network with one or more hidden layers. Specifically the multilayer network structure (or achitecture) consists of an input layer, one or more hidden layers and then an output layer.\newline
+
+2. The input neurons pass values to the first hidden layer. Then this first hidden layer takes the values form the input layer and passes new values to the second hidden layer, which passes values to the third hidden layer, and so on. This goes on until the output layers are reached. \newline
+
+Conventionally, one names the network by the number of layers it has. For example, a network with one input layer, one hidden layer and one output layer is called a two-layer network. A neural network with only one layer (the simple perceptron) works best in the cases with a binary model with clear (linear) boundaries between the outcomes. A more complex network with one or more hidden layers are used to approximate systems with more complex boundaries.
+
+Nevne noe om The Universal approximation theorem!
+
+
+\subsubsection{Mathematical model}
+The output $y$ is produced via the activation function f:
+\begin{equation}
+    y = f( \sum_{i=1}^n{\omega_i x_i + b_i} ) = f(z)
+\end{equation}
+where $\omega_i$ are the weights and $b_i$ are the bias. The inputs $x_i$ are the outputs of the neurons in the preceeding layer.\newline
+This is really nothing more, but (just) a weighted sum of the inputs $x_i$.\newline
+
+First, for each node (neuron) $i$ in the hidden layer, we calculate a weighted sum $z_i^1$ of the input coordinates $x_j$:
+\begin{equation}
+    z_i^1 = \sum_{j=1}^n \omega_{ij}^1 x_j + b_i^1
+\end{equation}
+
+The value of $z_i^1$ is the argument of the activation function $f_i$ of each node $i$. The variable M stands for all possible inputs to a given node $i$. in the first layer. So the bottom index corresponds to the spesific neuron $i$ in some layer, while the upper index corresponds to the layer itself. We define the output $y_i^1$ of all neurons in layer 1 (is layer 1 the input layer or the first hidden layer??) as
+\begin{equation}
+    y_i^1 = f(z_i^1) = f( \sum_{j=1}^M \omega_{ij}^1 x_j + b_i^1 )
+\end{equation}
+
+where we have assumed that all the neurons in the same layer have identical activation functions (this might not be the case, or??) In general one would typically assume that different layers have different activation functions. In that case we would identify these functions with a superscript (upper index) l for the l-th layer.
+\begin{equation}
+    y_i^l = f^l(u_i^l) = f^l( \sum_{j=1}^{N_{l-1}} \omega_{ij}^l y_j^{l-1} + b_i^l )
+\end{equation}
+When the output of all the nodes in the first hidden layer are computed, the values of the subsequent layer can be computed and so forth until the final output is obtained.\newline
+This can be generalized to an MLP with $l$ hidden layers:
+Legg inn liking (9) fra NeuralNet lecture notes.
+
+\subsubsection{Matrix-vector notation}
+The equations above describing the activations in our MLP can be rewritten as matrix-vector equations. This is a more convenient notation.\newline
+We can represent the biases and activations as column vectors $\Vec{b_l}$ and $\Vec{y_l}$ so that the i-th elements of the vectors are the bias $b_i^l$ and activation $y_i^l$ of node $i$ respectively. The index $l$ refer to the l-th layer.\newline
+The weigths can be gathered in a matrix $W_l$ of size $N_{l-1} \times N_l$, and $\Vec{b_l}$ and $\Vec{y_l}$ are both of size $N_l \times 1$. With this matrix-vector notation, the sum becomes a matrix-vector multiplication. As an example one can take a network with two hidden layers (three nodes). Then the activations of hidden layer two will be given as
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=10cm]{NN_1.png}
+\end{figure}
+which again can be written as
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=10cm]{NN_2.png}
+\end{figure}
+
+For each operation $W_l \Vec{y}_{l-1}$ we move one layer forward.\newline
+
+
+\subsubsection{Activation functions}
+Requirements on the activation function in order to fulfill the universal approximation theorem:\newline
+1. non-constant\newline
+2. bounded\newline
+3. monotonically-increasing and continuous\newline
+
+Note that the requirements on the acivation function only applies to the hidden layer(s?). The output nodes are always assumed to be linear, in order to not restrict the range of output values. No matter how many layers there are in the network, the final output will just be a linear function of the inputs.\newline
+Typical examples of activation functions are the logistic sigmoid function and the hyperbolic tangent function. The sigmoid function are likely more realistic because the output of inactive neurons are zero. Such activation functions are called one-sided. In this project we will use the same activation function $f$ for all layers and their neurons and the sigmoid function will be our prefered activation function: 
+\begin{equation}
+    f(x) = \frac{1}{ 1 - e^{-x} }
+\end{equation}
+
+
+
+3 nods = 2 hidden layers? Når man snakker om layer 2 f. eks mener man hvilket layer?\newline
+
+\begin{itemize}
+\item Github repository: \url{blablabla}
+\item
+\end{itemize}
+
+\subsubsection{Back propagation for a multilayer perceptron model}
+
+
+
+\end{document}
