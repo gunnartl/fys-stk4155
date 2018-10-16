@@ -74,7 +74,7 @@ Spin is a quantum mechanical property of the electron (this is not the only part
 The fact that the spins in ferromagnetic materials 'prefer' to be in alignment is based on two fundamental principles: energy minimization and entropy maximization.
 
 \subsubsection{Phase transitions}
-The point where a phase transition takes place is called a critical point and the associated temperature is called the critical temperature $T_C$. The disappearance of a spontaneous magnetization is a typical example of a second-order phase transition. The behaviour around the critical point can be related to the thermodynamical potential Helmholtz' free energy. That being said, in this project we will not worry so much about exactly what happens in the close region around the critical point (where the phase transition happens). We will look at this system as a simple binary system where the system either is in an ordered state (non-zero net magnetization) or unordered state (no net magnetization), in order to do classification of the phases.\newline
+The point where a phase transition takes place is called a critical point and the associated temperature is called the critical temperature $T_C$. The disappearance of a spontaneous magnetization is a typical example of a second-order phase transition. The behaviour around the critical point can be related to the thermodynamical potential Helmholtz' free energy. That being said, in this project we will not worry so much about exactly what happens in the close region around the critical point (where the phase transition happens). We will look at this system as a simple binary system where the system either is in an ordered state (non-zero net magnetization) or unordered state (no net magnetization), in order to do a binary classification of the phases.\newline
 The Ising model system exhibits a phase transition only for two dimensions or higher.
 
 \subsection{The Ising model}
@@ -96,6 +96,35 @@ In the case of small systems, the way we treat the spins at the ends of the latt
   \caption{One possible configuration of spins in a 2x2 Ising model}
   \includegraphics[width=1.5cm]{2x2-config.png}
 \end{figure}
+
+\subsection{Some statistics}
+
+\subsubsection{Universal approximation theorem?}
+
+\subsubsection{The likelihood function and maximum likelihood estimation}
+In statistics, a likelihood function is a function of the parameters of a statistical model, given specified observed data. Likelihood functions plays a key role in methods of estimating a parameter from a set of statistics. More specifically, the likelihood describes the plausibility of a model parameter value, given spesific observed data. Example ??\newline
+For many purposes, the natural logarithm of the likelihood, the so-called log-likelihood, is more practical to work with. Most often we are interested in where the likelihood reaches it's maximum value, and the logarithm of the likelihood function have it's maximum value at the same points as the regular likelihood function. Therefore we are in this project going to utilize the log-likelihood.\newline
+
+Maximum likelihood estimation (MLE) is a method that attemps to find the parameter values that maximizes the likelihood function.
+
+
+
+\subsection{Logistic regression}
+Our main concern with linear regression was to predict the response of a continuous variable on some unseen dataset. When it comes to logistic regression, it is most commonly used in situations where we have two possible outcomes, also called a binary outcome. This is a classification problem, where the outcomes take the form of discrete variables, like two different categories (as the ordered and unordered phases of the Ising model).
+
+\subsection{Accuracy of a classification model}
+To evaluate how well a classification model is performing one may count the number of correctly labeled classes and divide by the total number of classes. Thus, the accuracy $a$ is given by
+\begin{equation}
+    a(y,\tilde{y}) = \frac{1}{n}\sum_{i=1}^n I(y_i = \tilde{y}_i),
+\end{equation}
+where $I(y_i = \tilde{y}_i)$ is the so-called indicator function given by
+\begin{align}
+    I(x = y) = \begin{array}{cc}
+    1 & x = y, \\
+    0 & x \neq y.
+    \end{array}
+\end{align}
+
 
 \subsection{The gradient descent method}
 The gradient descent method is a minimization method
