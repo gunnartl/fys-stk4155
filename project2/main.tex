@@ -126,8 +126,22 @@ where $I(y_i = \tilde{y}_i)$ is the so-called indicator function given by
 \end{align}
 
 
-\subsection{The gradient descent method}
-The gradient descent method is a minimization method
+\subsection{The gradient descent (steepest descent) method}
+The gradient descent method is an efficient optimization algorithm that tries to find a local or global minima of a function. Usually one would prefer to find the global rather than the local minimum. The basic idea of gradient descent is that a function $F(\hat{x})$ decreases fastest if one moves away from $\hat{x}$ in the direction of the negative gradient $-\nabla F(\hat{x})$.\newline
+One starts with an initial guess $\hat{x}_0$ for a minimum of F and computes new approximations according to
+\begin{equation}
+    \hat{x}_{k+1} = \hat{x}_k - \eta_k \nabla F(\hat{x}_k)
+\end{equation}
+with $\eta_k > 0$ and $k \geq 0$. It can then be shown that for a sufficiently small $\eta_k$ one will have $F(\hat{x}_{k+1}) \leq F(\hat{x}_k)$. In other words, one will in that case always be moving towards a minimum of the function.\newline
+In our case, the function that we would like to minimize is the cost function.\newline
+
+The parameter $\eta_k$ is most often called the learning rate. It is important to find an optimal value for the learning rate in order for gradient descent to work properly. Having a small $\eta_k$ is obviously important because the criteria $F(\hat{x}_{k+1}) \leq F(\hat{x}_k)$ needs to be satisfied. That being said, having a too small learning rate can be problematic aswell because the steps towards the minimum of the loss function will then be tiny, which means that the process will take a lot of time. Therefore, the optimal learning rate will have to strike a balance between being too big and too small.\newline
+One can solve this problem by using a dynamic learning rate which changes as the gradient descent progresses. A possible way is to use a learning rate that decreases as the number of iterations increases. Another way is to use a learning rate that takes long steps when the function is steep, but shorter steps as the function flattens.\newline
+
+
+Ideally one would hope that the sequence of $\hat{x}$'s of equation (5) converges to a global minimum of the function F. If lucky enough, F is a convex function and the method will certainly converge to the global minimum.\newline 
+In general though, one may not know if F is convex or not. This means that there is a chance that one might get stuck in a local minimum while searching for the global minimum. It is clear that although the gradient descent method is intuitively simple to understand and implement, it also has several drawbacks.\newline
+One of these drawbacks is that the method is very sensitive to the choice of learning rate, for the reasons described above. Similarly, gradient descent is also sensitive to the chosen initial conditions (guess). On top of this it may also be computationally expensive to perform.
 
 \subsection{Neural networks}
 
