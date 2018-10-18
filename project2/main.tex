@@ -1,0 +1,397 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{biblatex}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{verbatim} 
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tikz}
+% \usepackage{physics}
+\usepackage{amssymb}
+\usepackage{titlesec}
+\usepackage{comment}
+\usepackage{subfig}
+\usepackage{geometry}
+
+%biblatex
+\iffalse
+\usepackage[
+backend=bibtex
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+\fi
+\addbibresource{refs.bib}
+
+%listings
+\lstset{language=c++}
+\lstset{basicstyle=\small}
+\lstset{backgroundcolor=\color{white}}
+\lstset{frame=single}
+\lstset{stringstyle=\ttfamily}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+\lstset{postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}}
+
+%tikz
+\setcounter{secnumdepth}{4}
+\usetikzlibrary{through, shapes, calc, shapes, arrows, positioning, er}
+\tikzstyle{neuron}=[draw,circle,minimum size=20pt,inner sep=0pt, fill=white]
+\tikzstyle{stateTransition}=[thick]
+\tikzstyle{learned}=[text=red]
+
+\title{FYS-STK4155 Proj1}
+\author{tobias }
+\date{October 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Abstract}
+
+\section{Introduction}
+
+\section{Theory}
+
+\subsection{Background for the Ising model}
+
+\subsubsection{Ferromagnetic materials}
+In most ordinary materials the magnetic dipoles associated with the atoms have a random orientation. This random distribution of magnetic moment results in approximately zero (macroscopic) magnetic moment. However, in ferromagnetic materials (like iron), a net magnetic moment is produced as a result of the prefered alignment of the atomic spins.
+Spin is a quantum mechanical property of the electron (this is not the only particle that has spin though), and can only be in two different states: pointing up or down. The spin of the electrons in atoms are the source of ferromagnetism, and when many of these spins point in the same direction, it creates a net macroscopic magnetic field.
+The fact that the spins in ferromagnetic materials 'prefer' to be in alignment is based on two fundamental principles: energy minimization and entropy maximization.
+
+\subsubsection{Phase transitions}
+The point where a phase transition takes place is called a critical point and the associated temperature is called the critical temperature $T_C$. The disappearance of a spontaneous magnetization is a typical example of a second-order phase transition. The behaviour around the critical point can be related to the thermodynamical potential Helmholtz' free energy. That being said, in this project we will not worry so much about exactly what happens in the close region around the critical point (where the phase transition happens). We will look at this system as a simple binary system where the system either is in an ordered state (non-zero net magnetization) or unordered state (no net magnetization), in order to do a binary classification of the phases.\newline
+The Ising model system exhibits a phase transition only for two dimensions or higher.
+
+\subsection{The Ising model}
+The Ising model illustrates the system by placing spins pointing either up or down. In the one-dimensional case the spins will simply form a line, while in the two-dimensional case the spins will be placed at regular lattice points as shown in figure 1. We will for the rest of this section focus on the two-dimensional case as it is quick to go from two to one dimension later on. Every different configuration of spins in the lattice is a microstate, and  the total sum of all the the microstates in the system one may call the multiplicity. The lattice is often squared with dimensions $L \times L = N$, where L is the number of spins in each direction and the total number of spins are equal to N. Since each spin has two different directions to be in, the number of possible different configurations of the system is equal to $2^N$. The interactions between the spins are restricted to nearest neighbors only.\newline
+With no external magnetic field present the energy for a specific configuration (state) $i$ is given as:
+\begin{equation}
+    E_i = -J \sum_{<kl>}^{N} s_k s_l
+\end{equation}
+where the symbol $<kl>$ indicates that the sum is over nearest neighbors only, $s_k$ and $s_l$ are the respective nearest neighbour spins. In our discussion the values for the spins will be +1 for spin up and -1 for spin down. J is a coupling constant expressing the strength of the interaction between neighboring spins. For ferromagnetic materials, $J > 0$. It is from (1) easy to see that it is energetically favorable for neighboring spins to be aligned. This fact can lead to the lattice having a net magnetization even in the absence of a magnetic field.\newline
+The magnetization $M_i$ associated with state $i$ is given by:
+\begin{equation}
+    M_i = \sum_{i}^{N}s_i
+\end{equation}
+
+In the case of small systems, the way we treat the spins at the ends of the lattice matters. In this project we will use periodic boundary conditions. This means that the spins at the edges of the lattice are made to interact with the spins at the geometric opposite edges of the lattice.\newline
+
+\begin{figure}[h!]
+  \centering
+  \caption{One possible configuration of spins in a 2x2 Ising model}
+  \includegraphics[width=1.5cm]{2x2-config.png}
+\end{figure}
+
+\subsection{Some statistics}
+
+\subsubsection{Universal approximation theorem?}
+
+\subsubsection{The likelihood function and maximum likelihood estimation}
+In statistics, a likelihood function is a function of the parameters of a statistical model, given specified observed data. Likelihood functions plays a key role in methods of estimating a parameter from a set of statistics. More specifically, the likelihood describes the plausibility of a model parameter value, given spesific observed data. Example ??\newline
+For many purposes, the natural logarithm of the likelihood, the so-called log-likelihood, is more practical to work with. Most often we are interested in where the likelihood reaches it's maximum value, and the logarithm of the likelihood function have it's maximum value at the same points as the regular likelihood function. Therefore we are in this project going to utilize the log-likelihood.\newline
+
+Maximum likelihood estimation (MLE) is a method that attemps to find the parameter values that maximizes the likelihood function.
+
+
+
+\subsection{Logistic regression}
+Our main concern with linear regression was to predict the response of a continuous variable on some unseen dataset. When it comes to logistic regression, it is most commonly used in situations where we have two possible outcomes, also called a binary outcome. This is a classification problem, where the outcomes take the form of discrete variables, like two different categories (as the ordered and unordered phases of the Ising model).
+
+\subsection{Accuracy of a classification model}
+To evaluate how well a classification model is performing one may count the number of correctly labeled classes and divide by the total number of classes. Thus, the accuracy $a$ is given by
+\begin{equation}
+    a(y,\tilde{y}) = \frac{1}{n}\sum_{i=1}^n I(y_i = \tilde{y}_i),
+\end{equation}
+where $I(y_i = \tilde{y}_i)$ is the so-called indicator function given by
+\begin{align}
+    I(x = y) = \begin{array}{cc}
+    1 & x = y, \\
+    0 & x \neq y.
+    \end{array}
+\end{align}
+
+
+\subsection{The gradient descent (steepest descent) method}
+The gradient descent method is an efficient optimization algorithm that tries to find a local or global minima of a function. Usually one would prefer to find the global rather than the local minimum. The basic idea of gradient descent is that a function $F(\hat{x})$ decreases fastest if one moves away from $\hat{x}$ in the direction of the negative gradient $-\nabla F(\hat{x})$.\newline
+One starts with an initial guess $\hat{x}_0$ for a minimum of F and computes new approximations according to
+\begin{equation}
+    \hat{x}_{k+1} = \hat{x}_k - \eta_k \nabla F(\hat{x}_k)
+\end{equation}
+with $\eta_k > 0$ and $k \geq 0$. It can then be shown that for a sufficiently small $\eta_k$ one will have $F(\hat{x}_{k+1}) \leq F(\hat{x}_k)$. In other words, one will in that case always be moving towards a minimum of the function.\newline
+In our case, the function that we would like to minimize is the cost function.\newline
+
+The parameter $\eta_k$ is most often called the learning rate. It is important to find an optimal value for the learning rate in order for gradient descent to work properly. Having a small $\eta_k$ is obviously important because the criteria $F(\hat{x}_{k+1}) \leq F(\hat{x}_k)$ needs to be satisfied. That being said, having a too small learning rate can be problematic aswell because the steps towards the minimum of the loss function will then be tiny, which means that the process will take a lot of time. Therefore, the optimal learning rate will have to strike a balance between being too big and too small.\newline
+One can solve this problem by using a dynamic learning rate which changes as the gradient descent progresses. A possible way is to use a learning rate that decreases as the number of iterations increases. Another way is to use a learning rate that takes long steps when the function is steep, but shorter steps as the function flattens.\newline
+
+
+Ideally one would hope that the sequence of $\hat{x}$'s of equation (5) converges to a global minimum of the function F. If lucky enough, F is a convex function and the method will certainly converge to the global minimum.\newline 
+In general though, one may not know if F is convex or not. This means that there is a chance that one might get stuck in a local minimum while searching for the global minimum. It is clear that although the gradient descent method is intuitively simple to understand and implement, it also has several drawbacks.\newline
+One of these drawbacks is that the method is very sensitive to the choice of learning rate, for the reasons described above. Similarly, gradient descent is also sensitive to the chosen initial conditions (guess). On top of this it may also be computationally expensive to perform.
+
+\subsection{Neural networks}
+
+\subsubsection{General procedure for neural networks with back propagation}
+In general it can be useful to list the key steps in our method of using neural networks to solve supervised learning problems. Therefore such an overview will follow below:\newline
+1. Collect and pre-process data (pre-processing of the data may not be necessary in all cases).\newline
+2. Define model and architecture. This includes how many layers to use in the model, how many neurons to use in each layer and so on.\newline
+3. Choose cost function and optimizer.\newline
+4. Train the model on the training data.\newline
+5. Evaluate the model (check how well it performs) on the test data.\newline
+6. Adjust hyperparameters (like the penaliazation $\lambda$) or network achitecture if necessary.\newline
+[ref: https://compphysics.github.io/MachineLearning/doc/pub/NeuralNet/pdf/NeuralNet-minted.pdf]
+
+\subsubsection{Multilayer perceptrons}
+One often uses so-called fully connected feed-forward neural networks with three or more layers (an input layer, one or more hidden layers and an output layer) consisting of neurons that have non-linear activation functions. Such networks are often called multilayer perceptrons (MLPs).\newline
+
+The multilayer perception model is a very popular approach because it is relatively easy to implement. The model consists of:\newline
+
+1. A neural network with one or more hidden layers. Specifically the multilayer network structure (or achitecture) consists of an input layer, one or more hidden layers and then an output layer.\newline
+
+2. The input neurons pass values to the first hidden layer. Then this first hidden layer takes the values form the input layer and passes new values to the second hidden layer, which passes values to the third hidden layer, and so on. This goes on until the output layers are reached. \newline
+
+Conventionally, one names the network by the number of layers it has. For example, a network with one input layer, one hidden layer and one output layer is called a two-layer network. A neural network with only one layer (the simple perceptron) works best in the cases with a binary model with clear (linear) boundaries between the outcomes. A more complex network with one or more hidden layers are used to approximate systems with more complex boundaries.
+
+Nevne noe om The Universal approximation theorem!
+
+
+\subsubsection{Mathematical model}
+The output $y$ is produced via the activation function f:
+\begin{equation}
+    y = f( \sum_{i=1}^n{\omega_i x_i + b_i} ) = f(z)
+\end{equation}
+where $\omega_i$ are the weights and $b_i$ are the bias. The inputs $x_i$ are the outputs of the neurons in the preceeding layer.\newline
+This is really nothing more, but (just) a weighted sum of the inputs $x_i$.\newline
+
+First, for each node (neuron) $i$ in the hidden layer, we calculate a weighted sum $z_i^1$ of the input coordinates $x_j$:
+\begin{equation}
+    z_i^1 = \sum_{j=1}^n \omega_{ij}^1 x_j + b_i^1
+\end{equation}
+
+The value of $z_i^1$ is the argument of the activation function $f_i$ of each node $i$. The variable M stands for all possible inputs to a given node $i$. in the first layer. So the bottom index corresponds to the spesific neuron $i$ in some layer, while the upper index corresponds to the layer itself. We define the output $y_i^1$ of all neurons in layer 1 (is layer 1 the input layer or the first hidden layer??) as
+\begin{equation}
+    y_i^1 = f(z_i^1) = f( \sum_{j=1}^M \omega_{ij}^1 x_j + b_i^1 )
+\end{equation}
+
+where we have assumed that all the neurons in the same layer have identical activation functions (this might not be the case, or??) In general one would typically assume that different layers have different activation functions. In that case we would identify these functions with a superscript (upper index) l for the l-th layer.
+\begin{equation}
+    y_i^l = f^l(u_i^l) = f^l( \sum_{j=1}^{N_{l-1}} \omega_{ij}^l y_j^{l-1} + b_i^l )
+\end{equation}
+When the output of all the nodes in the first hidden layer are computed, the values of the subsequent layer can be computed and so forth until the final output is obtained.\newline
+This can be generalized to an MLP with $l$ hidden layers:
+
+\begin{align}
+&y^{l+1}_i = f^{l+1}\left[\!\sum_{j=1}^{N_l} w_{ij}^3 f^l\left(\sum_{k=1}^{N_{l-1}}w_{jk}^{l-1}\left(\dots f^1\left(\sum_{n=1}^{N_0} w_{mn}^1 x_n+ b_m^1\right)\dots\right)+b_k^2\right)+b_1^3\right]
+\end{align}
+
+
+\subsubsection{Matrix-vector notation}
+The equations above describing the activations in our MLP can be rewritten as matrix-vector equations. This is a more convenient notation.\newline
+We can represent the biases and activations as column vectors $\hat{b_l}$ and $\hat{y_l}$ so that the i-th elements of the vectors are the bias $b_i^l$ and activation $y_i^l$ of node $i$ respectively. The index $l$ refer to the l-th layer.\newline
+The weigths can be gathered in a matrix $W_l$ of size $N_{l-1} \times N_l$, and $\hat{b_l}$ and $\hat{y_l}$ are both of size $N_l \times 1$. With this matrix-vector notation, the sum becomes a matrix-vector multiplication. As an example one can take a network with two hidden layers (three nodes). The activations of hidden layer number two will then be given as
+
+\begin{equation}
+ \hat{y}_2 = f_2(\mathrm{W}_2 \hat{y}_{1} + \hat{b}_{2}) = 
+ f_2\left(\left[\begin{array}{ccc}
+    w^2_{11} &w^2_{12} &w^2_{13} \\
+    w^2_{21} &w^2_{22} &w^2_{23} \\
+    w^2_{31} &w^2_{32} &w^2_{33} \\
+    \end{array} \right] \cdot
+    \left[\begin{array}{c}
+           y^1_1 \\
+           y^1_2 \\
+           y^1_3 \\
+          \end{array}\right] + 
+    \left[\begin{array}{c}
+           b^2_1 \\
+           b^2_2 \\
+           b^2_3 \\
+          \end{array}\right]\right).
+\end{equation}
+
+For each operation $W_l \hat{y}_{l-1}$ we move one layer forward.\newline
+
+\subsubsection{Activation functions}
+Requirements on the activation function in order to fulfill the universal approximation theorem:\newline
+1. non-constant\newline
+2. bounded\newline
+3. monotonically-increasing and continuous\newline
+
+Note that the requirements on the acivation function only applies to the hidden layer(s?). The output nodes are always assumed to be linear, in order to not restrict the range of output values. No matter how many layers there are in the network, the final output will just be a linear function of the inputs.\newline
+Typical examples of activation functions are the logistic sigmoid function and the hyperbolic tangent function. The sigmoid function are likely more realistic because the output of inactive neurons are zero. Such activation functions are called one-sided. In this project we will use the same activation function $f$ for all layers and their neurons and the sigmoid function will be our prefered activation function: 
+\begin{equation}
+    f(x) = \frac{1}{ 1 - e^{-x} }
+\end{equation}
+
+\begin{figure}[h!]
+  \centering
+  \caption{Our activation function (the sigmoid)}
+  \includegraphics[width=10cm]{sigmoid.png}
+\end{figure}
+
+
+
+3 nods = 2 hidden layers? Når man snakker om layer 2 f. eks mener man hvilket layer?\newline
+
+\begin{itemize}
+\item Github repository: \url{blablabla}
+\item
+\end{itemize}
+
+\subsubsection{Back propagation for a multilayer perceptron model}
+Our unknown variables $\omega_{ij}$ (the weigths) are a central part of our neural network. The problem at hand now is to find an algorithm for changing them in such a way that our errors are minimized. This is done via the famous back propagation algorithm.\newline 
+In order to derive the back propagation equations for a multilayer perceptron model, a few quantities needs to be defined. Let's first take our cost function for the regression case 
+\begin{equation}
+   {\cal C}(\hat{W})  =  \frac{1}{2}\sum_{i=1}^n\left(y_i - t_i\right)^2 
+\end{equation}
+
+where we have n $t_i$'s which are our targets (the values we want to reproduce). The $y_i$'s are the outputs of the network and we call the inputs $\hat{x}$.\newline
+Next, the activation $z_j^l$ of node $j$ of the l-th layer can be defined as
+\begin{equation}
+    z_j^l = \sum_{i=1}^{M_{l-1}}w_{ij}^la_i^{l-1}+b_j^l
+\end{equation}
+where $M_{l-1}$ are the total number of nodes of layer $l-1$, $b_j^l$ is the bias, $\omega_{ij}^l$ are the weigths that adds up from the previous layer and $\hat{a}^{l-1}$ are the outputs from the previous layer (l-1). As mentioned in an earlier section this can also be written as a matrix-vector product. In that notation it will look like:
+\begin{equation}
+    \hat{z}^l = \left(\hat{W}^l\right)^T\hat{a}^{l-1}+\hat{b}^l
+\end{equation}
+With the equations of the activation values $\hat{z}^l$ above we can now define the output of layer $l$ as
+\begin{equation}
+    \hat{a}^l = f(\hat{z}^l) = \frac{1}{1 + e^{-z_j^l}}
+\end{equation}
+where $f$ is our activation function as before.\newline
+
+\subsubsection{Deriving the back propagation equations}
+Equipped with the definitions of the previous section, we are now ready to derive the back propagation equations. First we need to calculate a few derivatives.\newline
+From the definition of the activation $z_j^l$, we have
+\begin{equation}
+    \frac{\partial z_j^l}{\partial w_{ij}^l} = a_i^{l-1}
+\end{equation}
+and
+\begin{equation}
+    \frac{\partial z_j^l}{\partial a_i^{l-1}} = w_{ji}^l
+\end{equation}
+
+Further we get from our definition of the activation function
+\begin{equation}
+    \frac{\partial a_j^l}{\partial z_j^{l}} = a_j^l(1-a_j^l)=f(z_j^l)(1-f(z_j^l))
+\end{equation}
+
+Now we have the tools to compute the derivative of the cost function with respect to the weigths. If we keep to the output layer $l=L$, our cost function can now be written
+\begin{equation}
+    {\cal C}(\hat{W^L})  =  \frac{1}{2}\sum_{i=1}^n\left(y_i - t_i\right)^2=\frac{1}{2}\sum_{i=1}^n\left(a_i^L - t_i\right)^2
+\end{equation}
+and the derivative of the cost function with respect to the weights is
+\begin{equation}
+    \frac{\partial{\cal C}(\hat{W^L})}{\partial w_{jk}^L}  =  \left(a_j^L - t_j\right)a_j^L(1-a_j^L)a_k^{L-1}
+\end{equation}
+
+In order to get a more compact expression for the derivative of the cost function, a new quantity $\delta_j^L$ is defined as
+\begin{equation}
+    \delta_j^L = a_j^L(1-a_j^L)\left(a_j^L - t_j\right) = f'(z_j^L)\frac{\partial {\cal C}}{\partial (a_j^L)}
+\end{equation}
+which again can be expressed as a Hadamard product of two vectors
+\begin{equation}
+    \hat{\delta}^L = f'(\hat{z}^L)\circ\frac{\partial {\cal C}}{\partial (\hat{a}L)}
+\end{equation}
+By using this our cost function can be written in a more compact way as
+\begin{equation}
+    \frac{\partial{\cal C}(\hat{W^L})}{\partial w_{jk}^L}  =  \delta_j^La_k^{L-1}.
+\end{equation}
+
+From the previous equation one can also see that
+\begin{equation}
+    \delta_j^L =\frac{\partial {\cal C}}{\partial z_j^L}= \frac{\partial {\cal C}}{\partial a_j^L}\frac{\partial a_j^L}{\partial z_j^L}
+\end{equation}
+and this can be interpreted as the partial derivative of the cost function with respect to the biases $b_j^l$:
+\begin{equation}
+    \delta_j^L = \frac{\partial {\cal C}}{\partial b_j^L}\frac{\partial b_j^L}{\partial z_j^L}=\frac{\partial {\cal C}}{\partial b_j^L}
+\end{equation}
+It is thus clear, from the equation above, that the error $\delta_j^L$ is exactly equal to the rate of change of the cost function with respect to the bias.\newline
+
+So far we have derived three equations that are necessary to start the algorithm. These are:
+\begin{equation}
+    \frac{\partial{\cal C}(\hat{W^L})}{\partial w_{jk}^L}  =  \delta_j^La_k^{L-1}
+\end{equation}
+and
+\begin{equation}
+\delta_j^L = f'(z_j^L)\frac{\partial {\cal C}}{\partial (a_j^L)},
+\end{equation}
+and
+\begin{equation}
+\delta_j^L = \frac{\partial {\cal C}}{\partial b_j^L},
+\end{equation}
+
+There are two interesting features related to these equations that are worth mentioning. First, one can see from equation (24) that when the activation $a_k^{L-1}$ is small, the derivative of the cost function with respect to the weights will move toward a smaller value aswell. This means that the cost function changes slowly when we minimize it (by for example using gradient descent). In those cases it is common to say that the system learns slowly.\newline
+Second, by looking at the activation function (the sigmoid) in figure 2 one can easily see that the sigmoid function flattens when moving far out in either positive- or negative x-direction. In those intervals we know that the derivative of the activation function must be close to zero. A consequence of this is that the gradient term once again moves towards zero which means that the system learns slowly in this case aswell.\newline
+
+The next step is now to derive the final and fourth back propagation equation. Based on the error from the final output layer we are going to propagate backwards and change the weights and biases accordingly in order to minimize the error. In order to do this we need to express the error in the next to last layer in terms of the errors in the final (last) output layer.\newline
+
+When replacing our specific layer L with a general layer $l$, equation (22) reads
+\begin{equation}
+    \delta_j^l =\frac{\partial {\cal C}}{\partial z_j^l}.
+\end{equation}
+As mentioned above, we want to express this error (of layer $l$) in terms of the equations for layer $l+1$. This is done by using the chain rule and summing over all $k$ entries:
+\begin{equation}
+    \delta_j^l =\sum_k \frac{\partial {\cal C}}{\partial z_k^{l+1}}\frac{\partial z_k^{l+1}}{\partial z_j^{l}}=\sum_k \delta_k^{l+1}\frac{\partial z_k^{l+1}}{\partial z_j^{l}},
+\end{equation}
+and then inserting the expression $z_j^{l+1} = \sum_{i=1}^{M_{l}}w_{ij}^{l+1}a_j^{l}+b_j^{l+1}$ from equation (11) into equation (28), we get
+\begin{equation}
+    \delta_j^l =\sum_k \delta_k^{l+1}w_{kj}^{l+1}f'(z_j^l)
+\end{equation}
+which is our final back propagation equation.
+
+\subsubsection{The back propagation equations}
+By grouping together equations (24)-(26) and (29) we have four equations that enable us to compute the gradient of the cost function:
+\begin{equation}
+    \frac{\partial{\cal C}(\hat{W^L})}{\partial w_{jk}^L}  =  \delta_j^La_k^{L-1}
+\end{equation}
+and
+\begin{equation}
+\delta_j^L = f'(z_j^L)\frac{\partial {\cal C}}{\partial (a_j^L)},
+\end{equation}
+and
+\begin{equation}
+\delta_j^L = \frac{\partial {\cal C}}{\partial b_j^L},
+\end{equation}
+and
+\begin{equation}
+    \delta_j^l =\sum_k \delta_k^{l+1}w_{kj}^{l+1}f'(z_j^l)
+\end{equation}
+
+\subsubsection{The back propagation algorithm}
+Now it is time to use the equations we just derived to set up the so-called back propagation algorithm.\newline
+
+1. Set up the input $\hat{x}$ and the activations $\hat{z}^1$ of the input layer, where the activations can be calculated from equation (11) or (12). The corresponding outputs $\hat{a}^1$ can then be calculated from equation (13).\newline 
+
+2. Perform the feed forward process. That means, for each layer $l = 2, 3,..., L$ (where L is the output layer) compute all $\hat{z^l}$ and $\hat{a^l}$ by using equations (11)-(13) again.\newline
+
+3. Compute the output error $\hat{\delta^L}$ from equation (31).\newline
+
+4. Backpropagate the error. That means, compute the back propagation error $\delta_j^l$ for each layer $l = L-1, L-2,..., 2$ from equation (33)(?).\newline
+
+5. Update the weights and biases using gradient descent for each layer $l=L-1, L-2,..., 2$. Specifically, the weights and biases are updated using the formulas
+\begin{equation}
+    w_{jk}^l\leftarrow  = w_{jk}^l- \eta \delta_j^la_k^{l-1},
+\end{equation}
+
+\begin{equation}
+    b_j^l \leftarrow b_j^l-\eta \frac{\partial {\cal C}}{\partial b_j^L}
+\end{equation}
+The parameter $\eta$ in the above equations is the learning parameter that was mentioned in relation to the gradient descent method.
+
+
+\end{document}

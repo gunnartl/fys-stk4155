@@ -78,9 +78,16 @@ class regression:
     def lasso(self, lambd):
         lasso = linear_model.Lasso(alpha = lambd,fit_intercept = False)
         lasso.fit(self.X, self.z)
-        beta = lasso.coef_[:,np.newaxis]
+        beta = lasso.coef_#[:,np.newaxis]
         self.znew = self.X.dot(beta)
-        return beta       
+        return beta
+
+         
+    def beata_variance(self):
+        sigma2 = (1./(len(self.z)-self.X.shape[1]-1))*sum((self.z-self.znew)**2)
+        covar = np.linalg.inv(self.X.T.dot(self.X))*sigma2
+        var = np.diagonal(covar)
+        return beta_var
 
     
     def MSE(self):

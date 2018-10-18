@@ -46,8 +46,7 @@ for i in range(20):
         ridge_beta = FRANK.ridge(0.01)
         MSE_vec[1,i,j] = MSE(z_test,X_test.dot(ridge_beta))
 
-
-        lasso_beta = FRANK.lasso(0.01)
+        lasso_beta = FRANK.lasso(0.01)[:, 0]
         MSE_vec[2,i,j] = MSE(z_test,X_test.dot(lasso_beta))
         
 
