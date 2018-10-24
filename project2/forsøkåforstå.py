@@ -4,6 +4,8 @@ np.random.seed(12)
 import warnings
 import reg_class
 from reg_class import * 
+from sklearn.model_selection import train_test_split
+
 #Comment this to turn on warnings
 #warnings.filterwarnings('ignore')
 ### define Ising model aprams
@@ -28,11 +30,22 @@ def ising_energies(states,L):
 # calculate Ising energies
 energies=ising_energies(states,L)
 
-s = np.outer(states[0,:],states[0,:]).ravel()
+stateprod =  np.zeros((10000,L*L))
+for i in range(10000):
+    stateprod[i,:] = np.outer(states[i,:],states[i,:]).ravel()
 
-test = regression(s,energies[0])
+print("før")
+print(energies.shape, stateprod.shape)
+stateprod_train, stateprod_test, energies_train, energies_test= train_test_split(stateprod,energies,test_size = 0.5) 
+print("etter")
+print(energies_test.shape, stateprod_test.shape, energies_train.shape, stateprod_train.shape)
 
-#e =np.linalg.inv(s.T.dot(s)).dot(s.T.dot([[E[0]]]))
-e= (1/(s.T.dot(s)))*s*(energies[0])
-print(e)
-#J = test.OLS()
+
+test = regression(stateprod_train,energies_train)
+Jtest = test.OLS()
+
+Jtest = Jtest.reshape((L,L))
+import matplotlib.pyplot as plt
+from matplotlib import cm
+plt.imshow(Jtest,cmap = "seismic")
+plt.show()

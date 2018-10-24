@@ -70,7 +70,7 @@ class regression:
     @jit
     def OLS(self):
         X = self.X
-        beta = np.linalg.inv(X.T.dot(X)).dot(X.T.dot(self.z))
+        beta = np.linalg.pinv(X.T.dot(X)).dot(X.T.dot(self.z))
         self.znew = X.dot(beta)
         return beta
     
