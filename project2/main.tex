@@ -52,7 +52,7 @@ sorting=ynt
 \tikzstyle{stateTransition}=[thick]
 \tikzstyle{learned}=[text=red]
 
-\title{FYS-STK4155 Proj2}
+\title{FYS-STK4155 Proj1}
 \author{tobias }
 \date{October 2018}
 
@@ -63,6 +63,7 @@ sorting=ynt
 \section{Abstract}
 
 \section{Introduction}
+Gå over til slutt og rett nummer på likninger
 
 \section{Theory}
 
@@ -83,7 +84,14 @@ With no external magnetic field present the energy for a specific configuration 
 \begin{equation}
     E_i = -J \sum_{<kl>}^{N} s_k s_l
 \end{equation}
-where the symbol $<kl>$ indicates that the sum is over nearest neighbors only, $s_k$ and $s_l$ are the respective nearest neighbour spins. In our discussion the values for the spins will be +1 for spin up and -1 for spin down. J is a coupling constant expressing the strength of the interaction between neighboring spins. For ferromagnetic materials, $J > 0$. It is from (1) easy to see that it is energetically favorable for neighboring spins to be aligned. This fact can lead to the lattice having a net magnetization even in the absence of a magnetic field.\newline
+where the symbol $<kl>$ indicates that the sum is over nearest neighbors only, $s_k$ and $s_l$ are the respective nearest neighbour spins. In our discussion the values for the spins will be +1 for spin up and -1 for spin down. J is a coupling constant expressing the strength of the interaction between neighboring spins. For ferromagnetic materials, $J > 0$.\newline
+
+In one dimension, equation (1) reduces to
+\begin{equation}
+    E = - J\sum_{k=1}^{N} s_k s_{k+1},
+\end{equation}
+
+It is from (1) also easy to see that it is energetically favorable for neighboring spins to be aligned. This fact can lead to the lattice having a net magnetization even in the absence of a magnetic field.\newline
 The magnetization $M_i$ associated with state $i$ is given by:
 \begin{equation}
     M_i = \sum_{i}^{N}s_i
@@ -99,7 +107,7 @@ In the case of small systems, the way we treat the spins at the ends of the latt
 
 \subsection{Some statistics}
 
-\subsubsection{Universal approximation theorem?}
+\subsubsection{Universal approximation theorem? Unødvendig avsnitt?}
 
 \subsubsection{The likelihood function and maximum likelihood estimation}
 In statistics, a likelihood function is a function of the parameters of a statistical model, given specified observed data. Likelihood functions plays a key role in methods of estimating a parameter from a set of statistics. More specifically, the likelihood describes the plausibility of a model parameter value, given spesific observed data. Example ??\newline
@@ -110,21 +118,25 @@ Maximum likelihood estimation (MLE) is a method that attemps to find the paramet
 
 
 \subsection{Logistic regression}
-Our main concern with linear regression was to predict the response of a continuous variable on some unseen dataset. When it comes to logistic regression, it is most commonly used in situations where we have two possible outcomes, also called a binary outcome. This is a classification problem, where the outcomes take the form of discrete variables, like two different categories (as the ordered and unordered phases of the Ising model).
+Our main concern with linear regression was to predict the response of a continuous variable on some unseen dataset. When it comes to logistic regression, it is most commonly used in situations where we have two possible outcomes, also called a binary outcome. This is a classification problem, where the outcomes take the form of discrete variables, like two different categories (as the ordered and unordered phases of the Ising model).\newline
+SKRIV OM MAXIMIZING THE LIKELIHOOD?
+
+\subsubsection{Cost function for logistic regression}
+MSE
 
 \subsection{Accuracy of a classification model}
 To evaluate how well a classification model is performing one may count the number of correctly labeled classes and divide by the total number of classes. Thus, the accuracy $a$ is given by
 \begin{equation}
     a(y,\tilde{y}) = \frac{1}{n}\sum_{i=1}^n I(y_i = \tilde{y}_i),
 \end{equation}
-where $I(y_i = \tilde{y}_i)$ is the so-called indicator function given by
+where $n$ is the toal number of classes and $I(y_i = \tilde{y}_i)$ is the so-called indicator function given by
 \begin{align}
     I(x = y) = \begin{array}{cc}
     1 & x = y, \\
     0 & x \neq y.
     \end{array}
 \end{align}
-
+A perfect classifier will have an accuracy score of 1.
 
 \subsection{The gradient descent (steepest descent) method}
 The gradient descent method is an efficient optimization algorithm that tries to find a local or global minima of a function. Usually one would prefer to find the global rather than the local minimum. The basic idea of gradient descent is that a function $F(\hat{x})$ decreases fastest if one moves away from $\hat{x}$ in the direction of the negative gradient $-\nabla F(\hat{x})$.\newline
@@ -141,9 +153,24 @@ One can solve this problem by using a dynamic learning rate which changes as the
 
 Ideally one would hope that the sequence of $\hat{x}$'s of equation (5) converges to a global minimum of the function F. If lucky enough, F is a convex function and the method will certainly converge to the global minimum.\newline 
 In general though, one may not know if F is convex or not. This means that there is a chance that one might get stuck in a local minimum while searching for the global minimum. It is clear that although the gradient descent method is intuitively simple to understand and implement, it also has several drawbacks.\newline
-One of these drawbacks is that the method is very sensitive to the choice of learning rate, for the reasons described above. Similarly, gradient descent is also sensitive to the chosen initial conditions (guess). On top of this it may also be computationally expensive to perform.
+One of these drawbacks is that the method is very sensitive to the choice of learning rate, for the reasons described above. Similarly, gradient descent is also sensitive to the chosen initial conditions (initial guess). On top of this it may also be computationally expensive to perform.
+
+\subsubsection{Stochastic gradient descent}
+A simple, but effective improvement of the gradient descent method is called batch gradient descent or stochastic gradient descent. This works by calculating the gradient on a subset of the data called a minibatch, instead of calculating the gradient on the whole dataset. If one have N data points in the dataset and the minibatch size of M, then the total number of batches is $\frac{N}{M}$. Then, if each minibatch is refered to as $B_k$ with $k = 1, 2,..., \frac{N}{M}$, the gradient becomes:
+
+\begin{equation}
+    \nabla C(\theta) = \frac{1}{N} \sum_{i=1}^N{\nabla L_i (\theta)} \rightarrow \frac{1}{M} \sum_{i \epsilon B_k} \nabla L_i(\theta)
+\end{equation}
+where $L$ refers to the loss function and $\theta$ represents the parameters of our network, like all the weigths and biases. By doing this the average is now over a minibatch instead over the entire dataset.\newline
+
+The stochastic gradient descent has two important benefits:\newline
+1. It decreases the chance that the algorithm becomes stuck in a local minima.\newline
+2. It speeds up the calculation significantly since we don't have to use the entire dataset to calculate the gradient.\newline
+
+When implementing this method into a neural network, a feed-forward + backward propagation with a minibatch is often refered to as an \emph{iteration}, and a full training period going through the whole dataset (all batches) is called an \emph{epoch}.
 
 \subsection{Neural networks}
+Neural networks is a method that can be used for both classification and regression problems depending on wether the activation function is adjusted to either classification or regression.
 
 \subsubsection{General procedure for neural networks with back propagation}
 In general it can be useful to list the key steps in our method of using neural networks to solve supervised learning problems. Therefore such an overview will follow below:\newline
@@ -226,12 +253,12 @@ The weigths can be gathered in a matrix $W_l$ of size $N_{l-1} \times N_l$, and 
 For each operation $W_l \hat{y}_{l-1}$ we move one layer forward.\newline
 
 \subsubsection{Activation functions}
-Requirements on the activation function in order to fulfill the universal approximation theorem:\newline
+In order to fulfill the universal approximation theorem, the activation function must be restrained by a few requirements:\newline
 1. non-constant\newline
 2. bounded\newline
 3. monotonically-increasing and continuous\newline
 
-Note that the requirements on the acivation function only applies to the hidden layer(s?). The output nodes are always assumed to be linear, in order to not restrict the range of output values. No matter how many layers there are in the network, the final output will just be a linear function of the inputs.\newline
+Note that the requirements on the acivation function only applies to the hidden layer(s). The output nodes are always assumed to be linear, in order to not restrict the range of output values. No matter how many layers there are in the network, the final output will just be a linear function of the inputs.\newline
 Typical examples of activation functions are the logistic sigmoid function and the hyperbolic tangent function. The sigmoid function are likely more realistic because the output of inactive neurons are zero. Such activation functions are called one-sided. In this project we will use the same activation function $f$ for all layers and their neurons and the sigmoid function will be our prefered activation function: 
 \begin{equation}
     f(x) = \frac{1}{ 1 - e^{-x} }
@@ -243,14 +270,63 @@ Typical examples of activation functions are the logistic sigmoid function and t
   \includegraphics[width=10cm]{sigmoid.png}
 \end{figure}
 
+A large benefit of the sigmoid function is that it is convex and has a simple derivative:
+\begin{eq}
+f'(x) = 
+\end{eq}
+
+\subsubsection{Cost function for regression}
+As before, we need to introduce a cost function to measure how well the model (our neural network) is performing.\newline
+When using neural networks to solve a regression problem, a typical choice for the cost function is the well known mean squared error:
+\begin{equation}
+   {\cal C}(\hat{W})  =  \frac{1}{2}\sum_{i=1}^n\left(y_i - t_i\right)^2 
+\end{equation}
+
+where we have n $t_i$'s which are our targets (the values we want to reproduce). The $y_i$'s are the outputs of the network.
+
+\subsubsection{Cost function for classification}
+ The function that gives the error of a single sample output will be called the loss function, and the function that gives the total error of our network is called the cost function. For a multiclass classification problem, the cross-entropy loss (also called the negative log likelihood) is a typical choice of loss function. The cost function can then be defined as the sum over the cross-entropy loss for each point in the dataset.\newline
+ To get our cross-entropy cost function, a likelihood function is needed. This is found by using the maximum likelihood estimation principle. The likelihood can then be approximated in terms of the product of the individual probabilities of a specific outcome $y_i$:
+ \begin{equation}
+     P(\mathcal{D}|\hat{\beta}) = \prod_{i=1}^n \left[p(y_i=1|x_i,\hat{\beta})\right]^{y_i}\left[1-p(y_i=1|x_i,\hat{\beta}))\right]^{1-y_i}\nonumber \\
+ \end{equation}
+ [ref:https://compphysics.github.io/MachineLearning/doc/pub/LogReg/pdf/LogReg-minted.pdf]\newline
+ 
+ From the equation above the cost function can then be written as
+ \begin{equation}
+ C(\hat{\beta}) = \sum_{i=1}^n \left( y_i\log{p(y_i=1|x_i,\hat{\beta})} + (1-y_i)\log\left[1-p(y_i=1|x_i,\hat{\beta}))\right]\right)
+ \end{equation}
+ 
+ which by reordering the logarithms again can be rewritten as
+ \begin{equation}
+     \mathcal{C}(\hat{\beta}) = \sum_{i=1}^n  \left(y_i(\beta_0+\beta_1x_i) -\log{(1+\exp{(\beta_0+\beta_1x_i)})}\right)
+ \end{equation}
+ and since the cost function is just the negative log-likelihood, the final expression for the cost function becomes
+ \begin{equation}
+     \mathcal{C}(\hat{\beta}) = -\sum_{i=1}^n  \left(y_i(\beta_0+\beta_1x_i) -\log{(1+\exp{(\beta_0+\beta_1x_i)})}\right)
+ \end{equation}
+ The equation above is well known in statistics as the \emph{cross entropy}.\newline
+ One important reason to use the cross-entropy is that it is convex and therefore relatively simple to deal with.
+It is also worth mentioning that one can supplement the cross entropy with so-called regularization terms to prevent the model from overfitting.\newline
+
+\subsubsection{Minimizing the cross entropy}
+Since the cross entropy is a convex funtion, one can be sure that the minimizing will lead to the global minima of the function. Taking the derivative of the cost function with respect to the two parameters $\beta_0$ and $\beta_1$, one can obtain
+\begin{equation*}
+    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \beta_0} = -\sum_{i=1}^n  \left(y_i -\frac{\exp{(\beta_0+\beta_1x_i)}}{1+\exp{(\beta_0+\beta_1x_i)}}\right)
+\end{equation*}
+and
+\begin{equation*}
+    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \beta_1} = -\sum_{i=1}^n  \left(y_ix_i -x_i\frac{\exp{(\beta_0+\beta_1x_i)}}{1+\exp{(\beta_0+\beta_1x_i)}}\right)
+\end{equation*}
+The first derivative of the cost function can then be written in a more compact way by defining a vector $\hat{y}$ with $n$ elements $y_i$, a
+$n\times p$ matrix $\hat{X}$ which contains the $x_i$ values and a
+vector $\hat{p}$ of fitted probabilities $p(y_i\vert x_i,\hat{\beta})$:
+\begin{equation}
+    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \hat{\beta}} = -\hat{X}^T\left(\hat{y}-\hat{p}\right)
+\end{equation}
 
 
-3 nods = 2 hidden layers? Når man snakker om layer 2 f. eks mener man hvilket layer?\newline
-
-\begin{itemize}
-\item Github repository: \url{blablabla}
-\item
-\end{itemize}
+IKKE FERDIG side??
 
 \subsubsection{Back propagation for a multilayer perceptron model}
 Our unknown variables $\omega_{ij}$ (the weigths) are a central part of our neural network. The problem at hand now is to find an algorithm for changing them in such a way that our errors are minimized. This is done via the famous back propagation algorithm.\newline 
@@ -307,7 +383,7 @@ which again can be expressed as a Hadamard product of two vectors
 \begin{equation}
     \hat{\delta}^L = f'(\hat{z}^L)\circ\frac{\partial {\cal C}}{\partial (\hat{a}L)}
 \end{equation}
-By using this our cost function can be written in a more compact way as
+By using this the derivative of the cost function can be written in a more compact way as
 \begin{equation}
     \frac{\partial{\cal C}(\hat{W^L})}{\partial w_{jk}^L}  =  \delta_j^La_k^{L-1}.
 \end{equation}
@@ -393,5 +469,14 @@ Now it is time to use the equations we just derived to set up the so-called back
 \end{equation}
 The parameter $\eta$ in the above equations is the learning parameter that was mentioned in relation to the gradient descent method.
 
+\section{Implementation}
+Please use this link for the Github adress where all code is available:\newline
+https://github.com/gunnartl/fys-stk4155/tree/master/project2
+
+\section{Comments}
+For more information about statistics, linear regression, OLS, the ridge method and the lasso method as well as resampling techniques, please see Project 1.
+
+\section{References}
+Mortens lecture notes
 
 \end{document}
