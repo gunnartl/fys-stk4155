@@ -113,6 +113,7 @@ $\{s_{j}^is_{k}^i \}_{j,k=1}^N$, and the index $i$ runs over the
 samples in the data set. Note that the
 regression model does not include the minus sign, so we expect to
 learn negative $J$'s.\newline
+[ref: \href{https://compphysics.github.io/MachineLearning/doc/Projects/2018/Project2/pdf/Project2.pdf}{Project 2}]\newline
 
 It is from (1) also easy to see that it is energetically favorable for neighboring spins to be aligned. This fact can lead to the lattice having a net magnetization even in the absence of a magnetic field.\newline
 The magnetization $M_i$ associated with state $i$ is given by:
@@ -120,9 +121,7 @@ The magnetization $M_i$ associated with state $i$ is given by:
     M_i = \sum_{i}^{N}s_i.
 \end{equation}
 
-In the case of small systems, the way we treat the spins at the ends of the lattice matters. In this project we will use periodic boundary conditions. This means that the spins at the edges of the lattice are made to interact with the spins at the geometric opposite edges of the lattice.\newline
-
-
+In the case of small systems, the way we treat the spins at the ends of the lattice matters. In this project we will use periodic boundary conditions. This means that the spins at the edges of the lattice are made to interact with the spins at the geometric opposite edges of the lattice.
 
 \begin{figure}[h!]
   \centering
@@ -132,8 +131,9 @@ In the case of small systems, the way we treat the spins at the ends of the latt
 
 \subsection{Some statistics}
 
-\subsubsection{Universal approximation theorem? Unødvendig avsnitt?}
-
+\subsubsection{The Universal approximation theorem}
+The universal approximation theorem states that a neural network with one hidden layer can approximate any continous function for inputs within a specific range, under mild assumptions on the activation function.\newline
+[ref: \href{https://towardsdatascience.com/can-neural-networks-really-learn-any-function-65e106617fc6}{https://towardsdatascience.com/can-neural-networks-really-learn-any-function-65e106617fc6}]
 
 \subsubsection{The likelihood function and maximum likelihood estimation}
 In statistics, a likelihood function is a function of the parameters of a statistical model, given specified observed data. Likelihood functions plays a key role in methods of estimating a parameter from a set of statistics. More specifically, the likelihood describes the plausibility of a model parameter value, given spesific observed data.\newline
@@ -141,12 +141,78 @@ For many purposes, the natural logarithm of the likelihood, the so-called log-li
 
 Maximum likelihood estimation (MLE) is a method that attemps to find the parameter values that maximizes the likelihood function.
 
+\subsection{The activation function}
+In order to fulfill the universal approximation theorem, the activation function must be restrained by a few requirements:\newline
+1. It must be non-constant\newline
+2. It must be bounded\newline
+3. It must be monotonically-increasing and continuous\newline
+
+Note that the requirements on the acivation function only applies to the hidden layer(s) when applying it on a neural network. The output nodes are always assumed to be linear, in order to not restrict the range of output values. No matter how many layers there are in the network, the final output will just be a linear function of the inputs.\newline
+
+Typical examples of activation functions are the logistic sigmoid function and the hyperbolic tangent function. The sigmoid function are likely more realistic because the output of inactive neurons are zero. Such activation functions are called one-sided. In this project we will use the same activation function $f$ for all layers and their neurons and the sigmoid function will be our prefered activation function: 
+\begin{equation}
+    f(x) = \frac{1}{ 1 - e^{-x} }
+\end{equation}
+
+\begin{figure}[h!]
+  \centering
+  \caption{Our activation function (the sigmoid)}
+  \includegraphics[width=10cm]{sigmoid.png}
+\end{figure}
+
+A large benefit of the sigmoid function is that it is convex and has a simple derivative:
+\begin{equation}
+    f'(x) = f(x)(1-f(x)).
+\end{equation}
+
 \subsection{Logistic regression}
-Our main concern with linear regression was to predict the response of a continuous variable on some unseen dataset. When it comes to logistic regression, it is most commonly used in situations where we have two possible outcomes, also called a binary outcome. This is a classification problem, where the outcomes take the form of discrete variables, like two different categories (as the ordered and unordered phases of the Ising model).\newline
-SKRIV OM MAXIMIZING THE LIKELIHOOD?
+Our main concern with linear regression was to predict the response of a continuous variable on some unseen dataset. When it comes to logistic regression, it is most commonly used in situations where we have two possible outcomes, also called a binary outcome. This is a classification problem, where the outcomes take the form of discrete variables, like two different categories. The phase classification problem of the Ising model which we are going to solve in this project is an example of this.
 
 \subsubsection{Cost function for logistic regression}
-MSE
+The function that gives the error of a single sample output will be called the loss function, and the function that gives the total error is called the cost function. For a multiclass classification problem, the cross-entropy loss (also called the negative log likelihood) is a typical choice of loss function. The cost function can then be defined as the sum over the cross-entropy loss for each point in the dataset. In the case of having two classes, this classification-dataset may be denoted {$\mathcal{D} = \{(y_i, x_i)\}$}, with labels $y_i = \epsilon \{0, 1\}$. The probability that a data point $x_i$ belongs to a category $y_i = \epsilon \{0, 1\}$ is simply given by the logit function Sigmoid.\newline
+ 
+ To get our cross-entropy cost function, a likelihood function is needed. This is found by using the maximum likelihood estimation principle. The likelihood can then be approximated in terms of the product of the individual probabilities of a specific outcome $y_i$:
+ \begin{equation}
+     P(\mathcal{D}|\hat{\beta}) = \prod_{i=1}^n \left[p(y_i=1|x_i,\hat{\beta})\right]^{y_i}\left[1-p(y_i=1|x_i,\hat{\beta}))\right]^{1-y_i}\nonumber \\
+ \end{equation}
+ [ref: \href{https://compphysics.github.io/MachineLearning/doc/pub/LogReg/pdf/LogReg-minted.pdf}{https://compphysics.github.io/MachineLearning/doc/pub/LogReg/pdf/LogReg-minted.pdf}]\newline
+ 
+ From the equation above the cost function can then be written as
+ \begin{equation}
+ C(\hat{\beta}) = \sum_{i=1}^n \left( y_i\log{p(y_i=1|x_i,\hat{\beta})} + (1-y_i)\log\left[1-p(y_i=1|x_i,\hat{\beta}))\right]\right)
+ \end{equation}
+ 
+ which by reordering the logarithms again can be rewritten as
+ \begin{equation}
+     \mathcal{C}(\hat{\beta}) = \sum_{i=1}^n  \left(y_i(\beta_0+\beta_1x_i) -\log{(1+\exp{(\beta_0+\beta_1x_i)})}\right)
+ \end{equation}
+ and since the cost function is just the negative log-likelihood, the final expression for the cost function becomes
+ \begin{equation}
+     \mathcal{C}(\hat{\beta}) = -\sum_{i=1}^n  \left(y_i(\beta_0+\beta_1x_i) -\log{(1+\exp{(\beta_0+\beta_1x_i)})}\right)
+ \end{equation}
+ Note that this is given the an assumption of only having two parameters $\beta$ in our fitting of the sigmoid function.\newline
+ The equation above is well known in statistics as the \emph{cross entropy}.\newline
+ One important reason to use the cross-entropy is that it is convex and therefore relatively simple to deal with.
+It is also worth mentioning that one can supplement the cross entropy with so-called regularization terms to prevent the model from overfitting.\newline
+
+\subsubsection{Minimizing the cross entropy}
+Since the cross entropy is a convex funtion, one can be sure that the minimizing will lead to the global minima of the function. Taking the derivative of the cost function with respect to the two parameters $\beta_0$ and $\beta_1$, one can obtain
+\begin{equation*}
+    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \beta_0} = -\sum_{i=1}^n  \left(y_i -\frac{\exp{(\beta_0+\beta_1x_i)}}{1+\exp{(\beta_0+\beta_1x_i)}}\right)
+\end{equation*}
+and
+\begin{equation*}
+    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \beta_1} = -\sum_{i=1}^n  \left(y_ix_i -x_i\frac{\exp{(\beta_0+\beta_1x_i)}}{1+\exp{(\beta_0+\beta_1x_i)}}\right)
+\end{equation*}
+The first derivative of the cost function can then be written in a more compact way by defining a vector $\hat{y}$ with $n$ elements $y_i$, a
+$n\times p$ matrix $\hat{X}$ which contains the $x_i$ values and a
+vector $\hat{p}$ of fitted probabilities $p(y_i\vert x_i,\hat{\beta})$:
+\begin{equation}
+    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \hat{\beta}} = -\hat{X}^T\left(\hat{y}-\hat{p}\right)
+\end{equation}
+
+In order to minimize the cross-entropy, the expression above for the derivative of the cost function must enter into the gradient descent algorithm.\newline
+
 
 \subsection{Accuracy of a classification model}
 To evaluate how well a classification model is performing one may count the number of correctly labeled classes and divide by the total number of classes. Thus, the accuracy $a$ is given by
@@ -217,9 +283,6 @@ The multilayer perception model is a very popular approach because it is relativ
 
 Conventionally, one names the network by the number of layers it has. For example, a network with one input layer, one hidden layer and one output layer is called a two-layer network. A neural network with only one layer (the simple perceptron) works best in the cases with a binary model with clear (linear) boundaries between the outcomes. A more complex network with one or more hidden layers are used to approximate systems with more complex boundaries.
 
-Nevne noe om The Universal approximation theorem!
-
-
 \subsubsection{Mathematical model}
 The output $y$ is produced via the activation function f:
 \begin{equation}
@@ -233,12 +296,14 @@ First, for each node (neuron) $i$ in the hidden layer, we calculate a weighted s
     z_i^1 = \sum_{j=1}^n \omega_{ij}^1 x_j + b_i^1
 \end{equation}
 
-The value of $z_i^1$ is the argument of the activation function $f_i$ of each node $i$. The variable M stands for all possible inputs to a given node $i$. in the first layer. So the bottom index corresponds to the spesific neuron $i$ in some layer, while the upper index corresponds to the layer itself. We define the output $y_i^1$ of all neurons in layer 1 (is layer 1 the input layer or the first hidden layer??) as
+The value of $z_i^1$ is the argument of the activation function $f_i$ of each node $i$.\newline
+
+In the equation below the variable M stands for all possible inputs to a given node $i$ in the first layer. So the bottom index corresponds to the spesific neuron $i$ in some layer, while the upper index corresponds to the layer itself. We define the output $y_i^1$ of all neurons in layer 1 as
 \begin{equation}
     y_i^1 = f(z_i^1) = f( \sum_{j=1}^M \omega_{ij}^1 x_j + b_i^1 )
 \end{equation}
 
-where we have assumed that all the neurons in the same layer have identical activation functions (this might not be the case, or??) In general one would typically assume that different layers have different activation functions. In that case we would identify these functions with a superscript (upper index) l for the l-th layer.
+where we have assumed that all the neurons in the same layer have identical activation functions. In general one would typically assume that different layers have different activation functions though, and in that case we would identify these functions with a superscript (upper index) l for the l-th layer.
 \begin{equation}
     y_i^l = f^l(u_i^l) = f^l( \sum_{j=1}^{N_{l-1}} \omega_{ij}^l y_j^{l-1} + b_i^l )
 \end{equation}
@@ -274,32 +339,9 @@ The weigths can be gathered in a matrix $W_l$ of size $N_{l-1} \times N_l$, and 
           \end{array}\right]\right).
 \end{equation}
 
-For each operation $W_l \hat{y}_{l-1}$ we move one layer forward.\newline
+For each operation $W_l \hat{y}_{l-1}$ we move one layer forward.
 
-\subsubsection{Activation functions}
-In order to fulfill the universal approximation theorem, the activation function must be restrained by a few requirements:\newline
-1. non-constant\newline
-2. bounded\newline
-3. monotonically-increasing and continuous\newline
-
-Note that the requirements on the acivation function only applies to the hidden layer(s). The output nodes are always assumed to be linear, in order to not restrict the range of output values. No matter how many layers there are in the network, the final output will just be a linear function of the inputs.\newline
-Typical examples of activation functions are the logistic sigmoid function and the hyperbolic tangent function. The sigmoid function are likely more realistic because the output of inactive neurons are zero. Such activation functions are called one-sided. In this project we will use the same activation function $f$ for all layers and their neurons and the sigmoid function will be our prefered activation function: 
-\begin{equation}
-    f(x) = \frac{1}{ 1 - e^{-x} }
-\end{equation}
-
-\begin{figure}[h!]
-  \centering
-  \caption{Our activation function (the sigmoid)}
-  \includegraphics[width=10cm]{sigmoid.png}
-\end{figure}
-
-A large benefit of the sigmoid function is that it is convex and has a simple derivative:
-\begin{eq}
-f'(x) = 
-\end{eq}
-
-\subsubsection{Cost function for regression}
+\subsubsection{Cost function for regression with neural network}
 As before, we need to introduce a cost function to measure how well the model (our neural network) is performing.\newline
 When using neural networks to solve a regression problem, a typical choice for the cost function is the well known mean squared error:
 \begin{equation}
@@ -308,49 +350,14 @@ When using neural networks to solve a regression problem, a typical choice for t
 
 where we have n $t_i$'s which are our targets (the values we want to reproduce). The $y_i$'s are the outputs of the network.
 
-\subsubsection{Cost function for classification}
- The function that gives the error of a single sample output will be called the loss function, and the function that gives the total error of our network is called the cost function. For a multiclass classification problem, the cross-entropy loss (also called the negative log likelihood) is a typical choice of loss function. The cost function can then be defined as the sum over the cross-entropy loss for each point in the dataset.\newline
- To get our cross-entropy cost function, a likelihood function is needed. This is found by using the maximum likelihood estimation principle. The likelihood can then be approximated in terms of the product of the individual probabilities of a specific outcome $y_i$:
- \begin{equation}
-     P(\mathcal{D}|\hat{\beta}) = \prod_{i=1}^n \left[p(y_i=1|x_i,\hat{\beta})\right]^{y_i}\left[1-p(y_i=1|x_i,\hat{\beta}))\right]^{1-y_i}\nonumber \\
- \end{equation}
- [ref:https://compphysics.github.io/MachineLearning/doc/pub/LogReg/pdf/LogReg-minted.pdf]\newline
- 
- From the equation above the cost function can then be written as
- \begin{equation}
- C(\hat{\beta}) = \sum_{i=1}^n \left( y_i\log{p(y_i=1|x_i,\hat{\beta})} + (1-y_i)\log\left[1-p(y_i=1|x_i,\hat{\beta}))\right]\right)
- \end{equation}
- 
- which by reordering the logarithms again can be rewritten as
- \begin{equation}
-     \mathcal{C}(\hat{\beta}) = \sum_{i=1}^n  \left(y_i(\beta_0+\beta_1x_i) -\log{(1+\exp{(\beta_0+\beta_1x_i)})}\right)
- \end{equation}
- and since the cost function is just the negative log-likelihood, the final expression for the cost function becomes
- \begin{equation}
-     \mathcal{C}(\hat{\beta}) = -\sum_{i=1}^n  \left(y_i(\beta_0+\beta_1x_i) -\log{(1+\exp{(\beta_0+\beta_1x_i)})}\right)
- \end{equation}
- The equation above is well known in statistics as the \emph{cross entropy}.\newline
- One important reason to use the cross-entropy is that it is convex and therefore relatively simple to deal with.
-It is also worth mentioning that one can supplement the cross entropy with so-called regularization terms to prevent the model from overfitting.\newline
+\subsubsection{Cost function for classification with neural network}
+When it comes to using neural networks to do binary classification problems like the two-dimensional Ising model, we may reuse the cost function from the logistic regression case. The logistic function enters now in the output layer of the network, producing a probability $a^L$ (where L refers to the output layer $l=L$) which is then mapped to one of the two classes $y_i = \epsilon \{0, 1\}$.\newline
 
-\subsubsection{Minimizing the cross entropy}
-Since the cross entropy is a convex funtion, one can be sure that the minimizing will lead to the global minima of the function. Taking the derivative of the cost function with respect to the two parameters $\beta_0$ and $\beta_1$, one can obtain
-\begin{equation*}
-    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \beta_0} = -\sum_{i=1}^n  \left(y_i -\frac{\exp{(\beta_0+\beta_1x_i)}}{1+\exp{(\beta_0+\beta_1x_i)}}\right)
-\end{equation*}
-and
-\begin{equation*}
-    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \beta_1} = -\sum_{i=1}^n  \left(y_ix_i -x_i\frac{\exp{(\beta_0+\beta_1x_i)}}{1+\exp{(\beta_0+\beta_1x_i)}}\right)
-\end{equation*}
-The first derivative of the cost function can then be written in a more compact way by defining a vector $\hat{y}$ with $n$ elements $y_i$, a
-$n\times p$ matrix $\hat{X}$ which contains the $x_i$ values and a
-vector $\hat{p}$ of fitted probabilities $p(y_i\vert x_i,\hat{\beta})$:
+It can then be shown that the cost function at the final layer $l = L$ will be
 \begin{equation}
-    \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \hat{\beta}} = -\hat{X}^T\left(\hat{y}-\hat{p}\right)
+    {\cal C}(\hat{W})  =  -\sum_{i=1}^n( t_i log(a_i^L) + (1-t_i)log(1-a_i^L) )
 \end{equation}
-
-
-IKKE FERDIG side??
+[ref: \href{https://compphysics.github.io/MachineLearning/doc/pub/NeuralNet/pdf/NeuralNet-minted.pdf}{Lecture notes}]
 
 \subsubsection{Back propagation for a multilayer perceptron model}
 Our unknown variables $\omega_{ij}$ (the weigths) are a central part of our neural network. The problem at hand now is to find an algorithm for changing them in such a way that our errors are minimized. This is done via the famous back propagation algorithm.\newline 
@@ -385,7 +392,7 @@ and
     \frac{\partial z_j^l}{\partial a_i^{l-1}} = w_{ji}^l
 \end{equation}
 
-Further we get from our definition of the activation function
+Further we get from our definition of the activation function:
 \begin{equation}
     \frac{\partial a_j^l}{\partial z_j^{l}} = a_j^l(1-a_j^l)=f(z_j^l)(1-f(z_j^l))
 \end{equation}
@@ -491,18 +498,20 @@ Now it is time to use the equations we just derived to set up the so-called back
 \begin{equation}
     b_j^l \leftarrow b_j^l-\eta \frac{\partial {\cal C}}{\partial b_j^L}
 \end{equation}
-The parameter $\eta$ in the above equations is the learning parameter that was mentioned in relation to the gradient descent method.
+The parameter $\eta$ in the above equations is the learning parameter.
 
 \section{Implementation}
 Please use the link below for the Github adress where all source files are available:\newline
-\href{https://github.com/gunnartl/fys-stk4155/tree/master/project2}{https://github.com/gunnartl/fys-stk4155/tree/master/project2}
+\href{https://github.com/gunnartl/fys-stk4155/tree/master/project2}{https://github.com/gunnartl/fys-stk4155/tree/master/project2}.
 
-\section{Comments}
-For more background information on statistics, linear regression, resampling techniques and more, please see Project 1.
+\section{Conclusion}
+
+\section{Comment}
+For more background information on statistics, linear regression, resampling techniques and more, please see Project 1 which can be found on \href{https://github.com/gunnartl/fys-stk4155/blob/master/project1/FYS_STK_prosjekt_1_Rapport.pdf}{this Github adress}.
 
 \section{References}
 1. Hastie, T., Tibshirani, R., Friedman, J. 2009. \emph{The Elements of Statistical Learning Second Edition}\newline
-2. Morten Hjort-Jensen's lectures and lecture notes\newline
+2. Morten Hjort-Jensen's \href{https://compphysics.github.io/MachineLearning/doc/web/course.html}{lectures and lecture notes}\newline
 3. This article of \href{{https://arxiv.org/abs/1803.08823}}{Mehta et al, arXiv
 1803.08823}\newline
 4. The accompanied \href{https://physics.bu.edu/~pankajm/MLnotebooks.html}{notebooks} to the article of Mehta et al: \href{https://physics.bu.edu/~pankajm/MLnotebooks.html}{https://physics.bu.edu/~pankajm/MLnotebooks.html}\newline
