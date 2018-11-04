@@ -82,7 +82,7 @@ The disappearance of a spontaneous magnetization is a typical example of a secon
 
 \subsection{The Ising model}
 The Ising model illustrates the system by placing spins pointing either up or down. In the one-dimensional case the spins will simply form a line, while in the two-dimensional case the spins will be placed at regular lattice points as shown in figure 1. We will for the rest of this section focus on the two-dimensional case as it is quick to go from two to one dimension later on. Every different configuration of spins in the lattice is a microstate, and  the total sum of all the the microstates in the system one may call the multiplicity. The lattice is often squared with dimensions $L \times L = N$, where L is the number of spins in each direction and the total number of spins are equal to N. Since each spin has two different directions to be in, the number of possible different configurations of the system is equal to $2^N$. The interactions between the spins are restricted to nearest neighbors only.\newline
-With no external magnetic field present the energy for a specific configuration (state) $i$ is given as:
+With no external magnetic field present the energy for a specific two-dimentional configuration (state) $i$ is given as:
 \begin{equation}
     E_i = -J \sum_{<kl>}^{N} s_k s_l
 \end{equation}
@@ -149,7 +149,7 @@ In order to fulfill the universal approximation theorem, the activation function
 
 Note that the requirements on the acivation function only applies to the hidden layer(s) when applying it on a neural network. The output nodes are always assumed to be linear, in order to not restrict the range of output values. No matter how many layers there are in the network, the final output will just be a linear function of the inputs.\newline
 
-Typical examples of activation functions are the logistic sigmoid function and the hyperbolic tangent function. The sigmoid function are likely more realistic because the output of inactive neurons are zero. Such activation functions are called one-sided. In this project we will use the same activation function $f$ for all layers and their neurons and the sigmoid function will be our prefered activation function: 
+Typical examples of activation functions are the logistic sigmoid function, the rectified linear unit (ReLU) and the hyperbolic tangent function. The sigmoid function are likely more realistic because the output of inactive neurons are zero. Such activation functions are called one-sided. In this project we will use the same activation function $f$ for all layers and their neurons and the sigmoid function will be our prefered activation function: 
 \begin{equation}
     f(x) = \frac{1}{ 1 - e^{-x} }
 \end{equation}
@@ -165,6 +165,22 @@ A large benefit of the sigmoid function is that it is convex and has a simple de
     f'(x) = f(x)(1-f(x)).
 \end{equation}
 
+\subsection{Accuracy of a classification model}
+To evaluate how well a classification model is performing one may count the number of correctly labeled classes and divide by the total number of classes. Thus, the accuracy $a$ is given by
+\begin{equation}
+    a(y,\tilde{y}) = \frac{1}{n}\sum_{i=1}^n I(y_i = \tilde{y}_i),
+\end{equation}
+where $n$ is the toal number of classes and $I(y_i = \tilde{y}_i)$ is the so-called indicator function given by
+\begin{align}
+    I(x = y) = \begin{array}{cc}
+    1 & x = y, \\
+    0 & x \neq y.
+    \end{array}
+\end{align}
+A perfect classifier will have an accuracy score of 1.
+
+\section{Methods}
+
 \subsection{Logistic regression}
 Our main concern with linear regression was to predict the response of a continuous variable on some unseen dataset. When it comes to logistic regression, it is most commonly used in situations where we have two possible outcomes, also called a binary outcome. This is a classification problem, where the outcomes take the form of discrete variables, like two different categories. The phase classification problem of the Ising model which we are going to solve in this project is an example of this.
 
@@ -175,7 +191,7 @@ The function that gives the error of a single sample output will be called the l
  \begin{equation}
      P(\mathcal{D}|\hat{\beta}) = \prod_{i=1}^n \left[p(y_i=1|x_i,\hat{\beta})\right]^{y_i}\left[1-p(y_i=1|x_i,\hat{\beta}))\right]^{1-y_i}\nonumber \\
  \end{equation}
- [ref: \href{https://compphysics.github.io/MachineLearning/doc/pub/LogReg/pdf/LogReg-minted.pdf}{https://compphysics.github.io/MachineLearning/doc/pub/LogReg/pdf/LogReg-minted.pdf}]\newline
+ [ref: \href{https://compphysics.github.io/MachineLearning/doc/pub/LogReg/pdf/LogReg-minted.pdf}{Lecture notes}]\newline
  
  From the equation above the cost function can then be written as
  \begin{equation}
@@ -190,7 +206,7 @@ The function that gives the error of a single sample output will be called the l
  \begin{equation}
      \mathcal{C}(\hat{\beta}) = -\sum_{i=1}^n  \left(y_i(\beta_0+\beta_1x_i) -\log{(1+\exp{(\beta_0+\beta_1x_i)})}\right)
  \end{equation}
- Note that this is given the an assumption of only having two parameters $\beta$ in our fitting of the sigmoid function.\newline
+ Note that this is given an assumption of only having two parameters $\beta$ in our fitting of the sigmoid function.\newline
  The equation above is well known in statistics as the \emph{cross entropy}.\newline
  One important reason to use the cross-entropy is that it is convex and therefore relatively simple to deal with.
 It is also worth mentioning that one can supplement the cross entropy with so-called regularization terms to prevent the model from overfitting.\newline
@@ -211,22 +227,7 @@ vector $\hat{p}$ of fitted probabilities $p(y_i\vert x_i,\hat{\beta})$:
     \frac{\partial \mathcal{C}(\hat{\beta})}{\partial \hat{\beta}} = -\hat{X}^T\left(\hat{y}-\hat{p}\right)
 \end{equation}
 
-In order to minimize the cross-entropy, the expression above for the derivative of the cost function must enter into the gradient descent algorithm.\newline
-
-
-\subsection{Accuracy of a classification model}
-To evaluate how well a classification model is performing one may count the number of correctly labeled classes and divide by the total number of classes. Thus, the accuracy $a$ is given by
-\begin{equation}
-    a(y,\tilde{y}) = \frac{1}{n}\sum_{i=1}^n I(y_i = \tilde{y}_i),
-\end{equation}
-where $n$ is the toal number of classes and $I(y_i = \tilde{y}_i)$ is the so-called indicator function given by
-\begin{align}
-    I(x = y) = \begin{array}{cc}
-    1 & x = y, \\
-    0 & x \neq y.
-    \end{array}
-\end{align}
-A perfect classifier will have an accuracy score of 1.
+In order to minimize the cross-entropy, the expression above for the derivative of the cost function must enter into the gradient descent algorithm.
 
 \subsection{The gradient descent (steepest descent) method}
 The gradient descent method is an efficient optimization algorithm that tries to find a local or global minima of a function. Usually one would prefer to find the global rather than the local minimum. The basic idea of gradient descent is that a function $F(\hat{x})$ decreases fastest if one moves away from $\hat{x}$ in the direction of the negative gradient $-\nabla F(\hat{x})$.\newline
@@ -241,7 +242,7 @@ The parameter $\eta_k$ is most often called the learning rate. It is important t
 One can solve this problem by using a dynamic learning rate which changes as the gradient descent progresses. A possible way is to use a learning rate that decreases as the number of iterations increases. Another way is to use a learning rate that takes long steps when the function is steep, but shorter steps as the function flattens.\newline
 
 
-Ideally one would hope that the sequence of $\hat{x}$'s of equation (5) converges to a global minimum of the function F. If lucky enough, F is a convex function and the method will certainly converge to the global minimum.\newline 
+Ideally one would hope that the sequence of $\hat{x}$'s of equation (14) converges to a global minimum of the function F. If lucky enough, F is a convex function and the method will certainly converge to the global minimum.\newline 
 In general though, one may not know if F is convex or not. This means that there is a chance that one might get stuck in a local minimum while searching for the global minimum. It is clear that although the gradient descent method is intuitively simple to understand and implement, it also has several drawbacks.\newline
 One of these drawbacks is that the method is very sensitive to the choice of learning rate, for the reasons described above. Similarly, gradient descent is also sensitive to the chosen initial conditions (initial guess). On top of this it may also be computationally expensive to perform.
 
@@ -270,7 +271,7 @@ In general it can be useful to list the key steps in our method of using neural 
 4. Train the model on the training data.\newline
 5. Evaluate the model (check how well it performs) on the test data.\newline
 6. Adjust hyperparameters (like the penaliazation $\lambda$) or network achitecture if necessary.\newline
-[ref: https://compphysics.github.io/MachineLearning/doc/pub/NeuralNet/pdf/NeuralNet-minted.pdf]
+[ref: \href{https://compphysics.github.io/MachineLearning/doc/pub/NeuralNet/pdf/NeuralNet-minted.pdf}{Lecture notes}]
 
 \subsubsection{Multilayer perceptrons}
 One often uses so-called fully connected feed-forward neural networks with three or more layers (an input layer, one or more hidden layers and an output layer) consisting of neurons that have non-linear activation functions. Such networks are often called multilayer perceptrons (MLPs).\newline
@@ -316,7 +317,7 @@ This can be generalized to an MLP with $l$ hidden layers:
 
 
 \subsubsection{Matrix-vector notation}
-The equations above describing the activations in our MLP can be rewritten as matrix-vector equations. This is a more convenient notation.\newline
+The equations above describing the activations in our MLP can be rewritten as matrix-vector equations, which is is a more convenient notation.\newline
 We can represent the biases and activations as column vectors $\hat{b_l}$ and $\hat{y_l}$ so that the i-th elements of the vectors are the bias $b_i^l$ and activation $y_i^l$ of node $i$ respectively. The index $l$ refer to the l-th layer.\newline
 The weigths can be gathered in a matrix $W_l$ of size $N_{l-1} \times N_l$, and $\hat{b_l}$ and $\hat{y_l}$ are both of size $N_l \times 1$. With this matrix-vector notation, the sum becomes a matrix-vector multiplication. As an example one can take a network with two hidden layers (three nodes). The activations of hidden layer number two will then be given as
 
@@ -442,12 +443,12 @@ and
 \delta_j^L = \frac{\partial {\cal C}}{\partial b_j^L},
 \end{equation}
 
-There are two interesting features related to these equations that are worth mentioning. First, one can see from equation (24) that when the activation $a_k^{L-1}$ is small, the derivative of the cost function with respect to the weights will move toward a smaller value aswell. This means that the cost function changes slowly when we minimize it (by for example using gradient descent). In those cases it is common to say that the system learns slowly.\newline
+There are two interesting features related to these equations that are worth mentioning. First, one can see from equation (38) that when the activation $a_k^{L-1}$ is small, the derivative of the cost function with respect to the weights will move toward a smaller value aswell. This means that the cost function changes slowly when we minimize it (by for example using gradient descent). In those cases it is common to say that the system learns slowly.\newline
 Second, by looking at the activation function (the sigmoid) in figure 2 one can easily see that the sigmoid function flattens when moving far out in either positive- or negative x-direction. In those intervals we know that the derivative of the activation function must be close to zero. A consequence of this is that the gradient term once again moves towards zero which means that the system learns slowly in this case aswell.\newline
 
 The next step is now to derive the final and fourth back propagation equation. Based on the error from the final output layer we are going to propagate backwards and change the weights and biases accordingly in order to minimize the error. In order to do this we need to express the error in the next to last layer in terms of the errors in the final (last) output layer.\newline
 
-When replacing our specific layer L with a general layer $l$, equation (22) reads
+When replacing our specific layer L with a general layer $l$, equation (36) reads
 \begin{equation}
     \delta_j^l =\frac{\partial {\cal C}}{\partial z_j^l}.
 \end{equation}
@@ -455,14 +456,14 @@ As mentioned above, we want to express this error (of layer $l$) in terms of the
 \begin{equation}
     \delta_j^l =\sum_k \frac{\partial {\cal C}}{\partial z_k^{l+1}}\frac{\partial z_k^{l+1}}{\partial z_j^{l}}=\sum_k \delta_k^{l+1}\frac{\partial z_k^{l+1}}{\partial z_j^{l}},
 \end{equation}
-and then inserting the expression $z_j^{l+1} = \sum_{i=1}^{M_{l}}w_{ij}^{l+1}a_j^{l}+b_j^{l+1}$ from equation (11) into equation (28), we get
+and then recalling that $z_j^{l+1} = \sum_{i=1}^{M_{l}}w_{ij}^{l+1}a_j^{l}+b_j^{l+1}$ from equation (25), we get
 \begin{equation}
     \delta_j^l =\sum_k \delta_k^{l+1}w_{kj}^{l+1}f'(z_j^l)
 \end{equation}
 which is our final back propagation equation.
 
 \subsubsection{The back propagation equations}
-By grouping together equations (24)-(26) and (29) we have four equations that enable us to compute the gradient of the cost function:
+By grouping together equations (38)-(40) and (43) we have four equations that enable us to compute the gradient of the cost function:
 \begin{equation}
     \frac{\partial{\cal C}(\hat{W^L})}{\partial w_{jk}^L}  =  \delta_j^La_k^{L-1}
 \end{equation}
@@ -482,13 +483,13 @@ and
 \subsubsection{The back propagation algorithm}
 Now it is time to use the equations we just derived to set up the so-called back propagation algorithm.\newline
 
-1. Set up the input $\hat{x}$ and the activations $\hat{z}^1$ of the input layer, where the activations can be calculated from equation (11) or (12). The corresponding outputs $\hat{a}^1$ can then be calculated from equation (13).\newline 
+1. Set up the input $\hat{x}$ and the activations $\hat{z}^1$ of the input layer. The corresponding outputs $\hat{a}^1$ can then be calculated.\newline 
 
-2. Perform the feed forward process. That means, for each layer $l = 2, 3,..., L$ (where L is the output layer) compute all $\hat{z^l}$ and $\hat{a^l}$ by using equations (11)-(13) again.\newline
+2. Perform the feed forward process. That means, for each layer $l = 2, 3,..., L$ (where L is the output layer) compute all $\hat{z^l}$ and $\hat{a^l}$.\newline
 
-3. Compute the output error $\hat{\delta^L}$ from equation (31).\newline
+3. Compute the output error $\hat{\delta^L}$.\newline
 
-4. Backpropagate the error. That means, compute the back propagation error $\delta_j^l$ for each layer $l = L-1, L-2,..., 2$ from equation (33)(?).\newline
+4. Backpropagate the error. That means, compute the back propagation error $\delta_j^l$ for each layer $l = L-1, L-2,..., 2$.\newline
 
 5. Update the weights and biases using gradient descent for each layer $l=L-1, L-2,..., 2$. Specifically, the weights and biases are updated using the formulas
 \begin{equation}
@@ -498,7 +499,7 @@ Now it is time to use the equations we just derived to set up the so-called back
 \begin{equation}
     b_j^l \leftarrow b_j^l-\eta \frac{\partial {\cal C}}{\partial b_j^L}
 \end{equation}
-The parameter $\eta$ in the above equations is the learning parameter.
+The parameter $\eta$ in the above equations is the learning rate.
 
 \section{Implementation}
 Please use the link below for the Github adress where all source files are available:\newline
