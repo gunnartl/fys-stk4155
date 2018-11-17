@@ -28,8 +28,6 @@ def mcmc(L,cycles,temps):
         M2av = 0#M**2
         Mabs = 0#np.abs(M)
 
-        #E2 = E**2
-        #M2 = M**2
         w = np.exp(-np.arange(-8,9,4)/temps[temp])
         for i in range(cycles):
             #flip random spin
@@ -50,12 +48,12 @@ def mcmc(L,cycles,temps):
                     states[m,n] *= -1
                     E      += delta
                     M      += 2*states[m,n]
-            if i>cycles/10:
-                Eav += E
-                Mav += M
-                M2av += M**2
-                E2av += E**2
-                Mabs += np.abs(M)
+
+            Eav  += E
+            E2av += E**2
+            Mav  += M
+            M2av += M**2
+            Mabs += np.abs(M)
                 
                 
         Eav  /= cycles
@@ -63,7 +61,7 @@ def mcmc(L,cycles,temps):
         M2av /= cycles
         Mav  /= cycles
         Mabs /= cycles
-        heatcap = (E2av-Eav**2)/(temps[temp]**2)
+        heatcap = (E2av-Eav*Eav)/float((temps[temp]*temps[temp]))
         sucept  = (M2av-Mav**2)/(temps[temp])
         
         energies[temp] = Eav
@@ -74,11 +72,33 @@ def mcmc(L,cycles,temps):
 
 #%%
 if __name__ == "__main__":
-    L = 100
-    temps = np.linspace(2.2,2.4,12)
+    Ls = np.array([40,60,80,100,150])
+    temps = np.linspace(2.2,2.4,32)
     start = time.time()
-    cycles = int(1e6)
+    cycles = int(1e5)
+    energies = []
+    Cvs      = []
+    magnets  = []
+    sucepts  = []
+    
+    start = time.time()
+    for l in range(len(Ls)):
+        energy, Cv, magnet, sucept = mcmc(Ls[l],cycles,temps)
+        energies.append(energy)
+        Cvs.append(Cv)
+        magnets.append(magnet)
+        sucepts.append(sucept)
+    
+    energies = np.array(energies)
+    Cvs      = np.array(Cvs)
+    magnets  = np.array(magnets)
+    sucepts = np.array(sucepts)
+    
+    np.save("resultater_paralell",(energies,Cvs,magnets,sucepts))
 
-    energy, Cv, Magnet, sucept = mcmc(L,cycles,temps)
     stop = time.time()
     print(stop-start)
+#%%
+    for i in magnets:
+        plt.scatter(temps,i,alpha = 0.7)
+    plt.show()
