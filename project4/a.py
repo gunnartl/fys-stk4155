@@ -65,7 +65,7 @@ if __name__ == "__main__":
     temp = 1 # temperature
     start = time.time()
     #cycles=int(1e7)
-    cycles = 10**np.array([2,3,4,5])
+    cycles = 10**np.array([2,3,4,7])
     energy = np.zeros(len(cycles))
     magnet = np.zeros(len(cycles))
     Cv     = np.zeros(len(cycles))
@@ -81,5 +81,5 @@ if __name__ == "__main__":
     
     stop = time.time()
     
-    np.savetxt("tabell_a.txt",np.c_[cycles,energy,magnet,Cv,sucept]) # saves a NEAT table
-    print("time",stop-start)
+    #np.savetxt("tabell_a.txt",np.c_[cycles,energy,magnet,Cv,sucept]) # saves a NEAT table
+    #print("time",stop-start)

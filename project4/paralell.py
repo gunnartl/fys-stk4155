@@ -14,7 +14,7 @@ def init_state(state0):
     return E0,M0
 
 @njit(parallel = True)
-def mcmc(L,cycles,temps):
+def mcmc(L,cycles,temps,cutoff):
     energies = np.zeros(len(temps))
     magnets = np.zeros(len(temps))
     sucepts = np.zeros(len(temps))
@@ -48,19 +48,20 @@ def mcmc(L,cycles,temps):
                     states[m,n] *= -1
                     E      += delta
                     M      += 2*states[m,n]
-
-            Eav  += E
-            E2av += E**2
-            Mav  += M
-            M2av += M**2
-            Mabs += np.abs(M)
+            
+            if i > cutoff:
+                Eav  += E
+                E2av += E**2
+                Mav  += M
+                M2av += M**2
+                Mabs += np.abs(M)
                 
                 
-        Eav  /= cycles
-        E2av /= cycles
-        M2av /= cycles
-        Mav  /= cycles
-        Mabs /= cycles
+        Eav  /= (cycles-cutoff)
+        E2av /= (cycles-cutoff)
+        M2av /= (cycles-cutoff)
+        Mav  /= (cycles-cutoff)
+        Mabs /= (cycles-cutoff)
         heatcap = (E2av-Eav*Eav)/float((temps[temp]*temps[temp]))
         sucept  = (M2av-Mav**2)/(temps[temp])
         
@@ -72,10 +73,14 @@ def mcmc(L,cycles,temps):
 
 #%%
 if __name__ == "__main__":
-    Ls = np.array([40,60,80,100,150])
-    temps = np.linspace(2.2,2.4,32)
+    print(time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime()))
+    
+    Ls = np.array([40])
+    #temps = np.sort(np.concatenate((np.linspace(2.1,2.5,32),np.linspace(2.25,2.35,32))))
+    temps = np.sort(np.concatenate((0.08*np.random.randn(32)+2.27,0.04*np.random.randn(32)+2.27),axis=0))
     start = time.time()
-    cycles = int(1e5)
+    cycles = int(5e4)
+    cutoff = int(5e2)
     energies = []
     Cvs      = []
     magnets  = []
@@ -83,7 +88,7 @@ if __name__ == "__main__":
     
     start = time.time()
     for l in range(len(Ls)):
-        energy, Cv, magnet, sucept = mcmc(Ls[l],cycles,temps)
+        energy, Cv, magnet, sucept = mcmc(Ls[l],cycles,temps,cutoff)
         energies.append(energy)
         Cvs.append(Cv)
         magnets.append(magnet)
@@ -94,11 +99,15 @@ if __name__ == "__main__":
     magnets  = np.array(magnets)
     sucepts = np.array(sucepts)
     
-    np.save("resultater_paralell",(energies,Cvs,magnets,sucepts))
+    np.save("resultater_paralell_ny",(energies,Cvs,magnets,sucepts))
 
     stop = time.time()
     print(stop-start)
 #%%
-    for i in magnets:
-        plt.scatter(temps,i,alpha = 0.7)
+    import matplotlib.pyplot as plt
+    for i in Cvs:
+        plt.plot(temps,i)
+    
     plt.show()
+      
+        
