@@ -75,12 +75,12 @@ def mcmc(L,cycles,temps,cutoff):
 if __name__ == "__main__":
     print(time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime()))
     
-    Ls = np.array([40])
+    Ls = np.array([100])
     #temps = np.sort(np.concatenate((np.linspace(2.1,2.5,32),np.linspace(2.25,2.35,32))))
     temps = np.sort(np.concatenate((0.08*np.random.randn(32)+2.27,0.04*np.random.randn(32)+2.27),axis=0))
     start = time.time()
-    cycles = int(5e4)
-    cutoff = int(5e2)
+    cycles = int(1e7)
+    cutoff = int(5e4)
     energies = []
     Cvs      = []
     magnets  = []
@@ -99,13 +99,13 @@ if __name__ == "__main__":
     magnets  = np.array(magnets)
     sucepts = np.array(sucepts)
     
-    np.save("resultater_paralell_ny",(energies,Cvs,magnets,sucepts))
+    np.save("resultater_paralell_ny5mill",(energies,Cvs,magnets,sucepts,temps))
 
     stop = time.time()
     print(stop-start)
 #%%
     import matplotlib.pyplot as plt
-    for i in Cvs:
+    for i in sucepts:
         plt.plot(temps,i)
     
     plt.show()

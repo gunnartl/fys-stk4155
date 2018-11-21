@@ -20,27 +20,29 @@ def mcmc(states,E,M,cycles,temp):
     M2av = M**2
     Mabs = np.abs(M)
     L = states.shape[0]
-    for i in range(cycles):
-        #flip random spin
-        m = np.random.randint(L)
-        n = np.random.randint(L)
-
-        #compute delta
-        left = states[m-1,n]
-        right = states[(m+1)%L,n]
-        up = states[m,n-1]
-        down = states[m,(n+1)%L]
+    for j in range(cycles):
+        for i in range(L**2):
+            #flip random spin
+            m = np.random.randint(L)
+            n = np.random.randint(L)
+    
+            #compute delta
+            left = states[m-1,n]
+            right = states[(m+1)%L,n]
+            up = states[m,n-1]
+            down = states[m,(n+1)%L]
+            
+    
+            delta = 2*states[m,n] * (left+right+up+down)
+            
+            #check
+            if np.random.random() <= np.exp(-delta/temp):
+                states[m,n] *= -1
+                E      += delta
+                M      += 2*states[m,n]
+                #E2     += E**2
+                #M2     += M**2
         
-
-        delta = 2*states[m,n] * (left+right+up+down)
-        
-        #check
-        if np.random.random() <= np.exp(-delta/temp):
-            states[m,n] *= -1
-            E      += delta
-            M      += 2*states[m,n]
-            #E2     += E**2
-            #M2     += M**2
         Eav += E
         Mav += M
         M2av += M**2
@@ -65,7 +67,7 @@ if __name__ == "__main__":
     temp = 1 # temperature
     start = time.time()
     #cycles=int(1e7)
-    cycles = 10**np.array([2,3,4,7])
+    cycles = 10**np.array([2,3,4,5,6,7])
     energy = np.zeros(len(cycles))
     magnet = np.zeros(len(cycles))
     Cv     = np.zeros(len(cycles))
@@ -81,5 +83,5 @@ if __name__ == "__main__":
     
     stop = time.time()
     
-    #np.savetxt("tabell_a.txt",np.c_[cycles,energy,magnet,Cv,sucept]) # saves a NEAT table
-    #print("time",stop-start)
+    np.savetxt("tabell_a.txt",np.c_[cycles,energy,magnet,Cv,sucept]) # saves a NEAT table
+    print("time",stop-start)

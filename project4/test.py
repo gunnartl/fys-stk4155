@@ -67,7 +67,7 @@ if __name__ == "__main__":
     ordered_state1,E1_order,M1_order = init_state(L,ordered = True)
     temp = 1
     start = time.time()
-    cycles = int(2e4)
+    cycles = int(5e4)
     #energies = 
     #magnetisations
     
@@ -83,12 +83,12 @@ if __name__ == "__main__":
     #%%
     import matplotlib.pyplot as plt
     
-    if False: 
+    if True: 
         #Energy plot
-        plt.scatter(np.arange(cycles)[1::50],energy1[1::50],alpha=0.1,s =15)
-        plt.scatter(np.arange(cycles)[::100],energy3[::100],alpha=0.1,s =15)
-        plt.scatter(np.arange(cycles)[::20],energy2[::20],alpha=0.2,s =15)
-        plt.scatter(np.arange(cycles)[::20],energy4[::20],alpha=0.2,s =15)
+        plt.scatter(np.arange(cycles)[1::500],energy1[1::500],alpha=0.1,s =15)
+        plt.scatter(np.arange(cycles)[::1000],energy3[::1001],alpha=0.1,s =15)
+        plt.scatter(np.arange(cycles)[::200],energy2[::200],alpha=0.2,s =15)
+        plt.scatter(np.arange(cycles)[::200],energy4[::200],alpha=0.2,s =15)
         
         plt.plot(np.arange(cycles),np.cumsum(energy1)/np.arange(1,cycles+1))
         plt.plot(np.arange(cycles),np.cumsum(energy3)/np.arange(1,cycles+1))
@@ -97,7 +97,7 @@ if __name__ == "__main__":
         
         plt.ylabel("Energy per state",FontSize = 12)
     
-    if True: 
+    if False: 
         #Magnetization plot
         plt.scatter(np.arange(cycles)[1::1000],magnet1[1::1000],alpha=1,s =15)
         plt.scatter(np.arange(cycles)[::2000],magnet3[::2000],alpha=1,s =15)
